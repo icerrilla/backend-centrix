@@ -1,5 +1,7 @@
 # Centrix: autenticación y administración de usuarios
 
+> Actualización de roles y permisos: los contratos vigentes, el catálogo de 35 permisos, ADMIN protegido, estado unificado y pasos de subida están en [roles-permisos.md](roles-permisos.md). Este documento conserva el contexto de la primera entrega; la actualización sustituye sus referencias a los 17 permisos iniciales y a las rutas separadas activar/inactivar.
+
 ## Estado de la entrega
 
 La implementación se ajustó al texto de acuerdos suministrado por el usuario. El 10 de noviembre de 2026 se completaron las siete migraciones y el seeder AccessCatalogSeeder en centrix_db, después de recuperar un fallo de índice causado por el motor MyISAM del servidor. Se verificaron 1 rol ADMIN, 4 módulos, 17 permisos y 17 asignaciones. No se crearon cuentas reales ni se enviaron correos reales. Las pruebas crean y revierten estructuras únicamente en SQLite en memoria y simulan notificaciones.
@@ -41,7 +43,7 @@ Son cuatro módulos y 17 permisos asignados a ADMIN. El seeder puede repetirse s
 
 La matriz del texto también propone CATÁLOGOS, PATROCINIOS, EVENTOS, DOCUMENTOS, RECORDATORIOS, TABLERO, CALENDARIO, MAPA y ASIGNACIÓN TERRITORIAL. Permanecen documentados para etapas de negocio, junto con pilares, marcas, territorios, embotelladores, categorías y asignaciones de visibilidad. No se inventaron sus datos ni se construyeron esos módulos en esta etapa. OPERADOR y CLIENTE tampoco se crean.
 
-El catálogo administrativo de roles y la edición/asignación de sus permisos siguen pendientes de endpoints de escritura. Sus códigos ya están reservados en el seeder; los endpoints actuales de catálogos son de consulta. Módulos y permisos técnicos se controlan desde el sistema. No se debe añadir un bypass por código ADMIN: la autorización efectiva consulta rol, permiso, asignación y módulo activos.
+El catálogo administrativo de roles y la asignación de permisos ya cuentan con endpoints separados; ver roles-permisos.md. Los códigos técnicos son un catálogo fijo. Por el nuevo acuerdo, ADMIN está protegido y tiene todos sus permisos; el resto de los roles usa asignaciones y exige rol, permiso y módulo activos.
 
 ## API disponible después de aplicar el esquema
 
@@ -97,7 +99,7 @@ Códigos: 200 éxito, 201 creación, 401 credenciales/sesión inválidas, 403 ac
 ## Configuración pendiente antes de usar invitaciones
 
 - Configurar MAIL_MAILER con un transporte de entrega real y sus credenciales. Se rechaza log y cualquier failover que incluya log, porque escribiría enlaces secretos. array se admite únicamente en pruebas. Si falla el envío al crear una cuenta, su creación se revierte; un error tardío de entrega de correo no puede retirarse del buzón externo, por lo que no deben reintentarse transacciones con envío automáticamente.
-- CENTRIX_PASSWORD_URL debe apuntar a la pantalla del frontend que recoge email/token y envía el reset a la API. Esa pantalla aún no está construida. HTTPS es obligatorio para el enlace cuando CENTRIX_REQUIRE_HTTPS=true.
+- CENTRIX_PASSWORD_URL puede apuntar a la pantalla incluida en el backend: https://backend-centrix.podium-sm.com/establecer-password. Recoge email/token del enlace y envía el reset a la API. HTTPS es obligatorio para el enlace cuando CENTRIX_REQUIRE_HTTPS=true. Ver docs/pantalla-password-cpanel.md para los archivos y pasos de subida por FTP.
 - En producción usar APP_ENV=production, APP_DEBUG=false, APP_URL con HTTPS y CENTRIX_REQUIRE_HTTPS=true. Configurar TLS en el servidor. Para desarrollo local por HTTP se puede fijar explícitamente false; no se cambió el .env real.
 - Si TLS termina en un proxy, configurar CENTRIX_TRUSTED_PROXIES como lista de sus direcciones separadas por comas. No confiar indiscriminadamente en cabeceras de cualquier cliente. Usar almacenamiento de caché compartido entre instancias para los límites de solicitudes.
 - El almacenamiento del token en el cliente sigue pendiente de decidir al construir el frontend. Esta entrega no escribe tokens en localStorage ni implementa una interfaz.

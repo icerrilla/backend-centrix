@@ -2,7 +2,7 @@
   "info": {
     "name": "Centrix — Colección Postman",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Importa este archivo en Postman. Configura las variables de esta colección: base_url, login y password. Envía Login > Iniciar sesión: el token se guarda automáticamente y se hereda en las peticiones protegidas. Configura usuario_id y rol_id antes de operar sobre usuarios. Las carpetas organizan los módulos y aquí se añadirán los siguientes endpoints.\n\nNo hay credenciales predeterminadas. Usa una cuenta con contraseña establecida. Crear usuarios y reenviar enlaces requieren correo y CENTRIX_PASSWORD_URL configurados. Para recuperación utiliza reset_token (el del enlace de correo, distinto del Bearer) y nueva_password. La contraseña nueva debe tener mínimo 12 caracteres, mayúsculas, minúsculas, números y símbolos; con bcrypt, máximo 72 bytes.\n\nLa URL de ejemplo es para desarrollo local. En producción utiliza HTTPS. Si aún no se aplicó el esquema, la API responde 503. Roles y módulos tienen endpoints de consulta; la bitácora se registra automáticamente. Las peticiones son independientes: eliminar realiza borrado físico y no se recomienda ejecutar toda la colección en secuencia. Mantén las credenciales y tokens reales como valores locales en Postman y no los compartas al exportar."
+    "description": "Centrix: login, usuarios, CRUD de roles, catálogo fijo de permisos y bitácora. Configura base_url, login y password. Login guarda automáticamente el token Bearer. El usuario de ejemplo es Jared (ID 8); no vuelvas a crearlo con el mismo usuario/correo. Crear usuario actualiza sus variables automáticamente.\n\nEstado: PATCH /usuarios/{id}/estado y PATCH /roles/{id}/estado reciben {\"activo\":true} o {\"activo\":false}; también aceptan los textos activo/inactivo. Se retiraron las rutas separadas activar/inactivar.\n\nCrear rol guarda rol_objetivo_id sin cambiar rol_id (el rol para crear/editar usuarios). PUT /roles/{id}/permisos recibe grupos {modulo,permisos:{consultar:true,crear:false}}; reemplaza toda la selección. ADMIN está protegido y no incluye permisos en login/me. Otros roles reciben los 9 módulos con sus 35 acciones true/false.\n\nROLES.ELIMINAR está incluido por confirmación del usuario; solo borra roles sin usuarios. PERMISOS.CONSULTAR protege el catálogo de permisos. Los cinco catálogos de negocio tienen códigos preparados; sus CRUD todavía no están implementados.\n\nEl correo y CENTRIX_PASSWORD_URL deben estar configurados para invitaciones. Reset usa reset_token del enlace, no el Bearer. No guardes contraseñas ni tokens reales en valores compartidos. Variables de entorno con el mismo nombre pueden sobrescribir los valores de esta colección. Las peticiones son independientes; no ejecutes toda la colección en secuencia porque incluye eliminaciones físicas."
   },
   "auth": {
     "type": "bearer",
@@ -17,12 +17,12 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "http://127.0.0.1:8000/api",
+      "value": "https://backend-centrix.podium-sm.com/api",
       "type": "string"
     },
     {
       "key": "login",
-      "value": "admin",
+      "value": "adrian.islas.lopez",
       "type": "string"
     },
     {
@@ -37,7 +37,7 @@
     },
     {
       "key": "usuario_id",
-      "value": "",
+      "value": "8",
       "type": "string"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "key": "email_recuperacion",
-      "value": "admin@example.com",
+      "value": "floresjared156@gmail.com",
       "type": "string"
     },
     {
@@ -62,17 +62,62 @@
     },
     {
       "key": "usuario_login",
-      "value": "jperez",
+      "value": "jflores",
       "type": "string"
     },
     {
       "key": "usuario_email",
-      "value": "jperez@example.com",
+      "value": "floresjared156@gmail.com",
       "type": "string"
     },
     {
       "key": "usuario_email_nuevo",
-      "value": "jperez.nuevo@example.com",
+      "value": "floresjared156@gmail.com",
+      "type": "string"
+    },
+    {
+      "key": "usuario_nombre",
+      "value": "Jared",
+      "type": "string"
+    },
+    {
+      "key": "usuario_apellido_paterno",
+      "value": "Flores",
+      "type": "string"
+    },
+    {
+      "key": "usuario_apellido_materno",
+      "value": "Guarneros",
+      "type": "string"
+    },
+    {
+      "key": "rol_objetivo_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "rol_codigo",
+      "value": "OPERADOR",
+      "type": "string"
+    },
+    {
+      "key": "rol_nombre",
+      "value": "Operador",
+      "type": "string"
+    },
+    {
+      "key": "rol_activo",
+      "value": "true",
+      "type": "string"
+    },
+    {
+      "key": "usuario_activo",
+      "value": "true",
+      "type": "string"
+    },
+    {
+      "key": "modulo_permisos",
+      "value": "USUARIOS",
       "type": "string"
     }
   ],
@@ -116,7 +161,8 @@
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "ADMIN devuelve usuario.rol sin usuario.permisos y tiene todos los permisos del catálogo. Los demás roles reciben usuario.rol y usuario.permisos agrupados por módulo con acciones true/false. GET /me refleja cambios sin volver a iniciar sesión."
           },
           "response": [],
           "event": [
@@ -325,7 +371,7 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/usuarios?buscar=juan&activo=1&bloqueado=0&rol_id={{rol_id}}&page=1&per_page=20",
+              "raw": "{{base_url}}/usuarios?buscar={{usuario_login}}&activo=1&bloqueado=0&rol_id={{rol_id}}&page=1&per_page=20",
               "host": [
                 "{{base_url}}"
               ],
@@ -335,7 +381,7 @@
               "query": [
                 {
                   "key": "buscar",
-                  "value": "juan"
+                  "value": "{{usuario_login}}"
                 },
                 {
                   "key": "activo",
@@ -413,15 +459,95 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido_paterno\": \"Perez\",\n  \"apellido_materno\": \"Lopez\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email}}\",\n  \"rol_id\": {{rol_id}}\n}",
+              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email}}\",\n  \"rol_id\": {{rol_id}}\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
-            }
+            },
+            "description": "Al recibir 201, guarda los datos del usuario creado en las variables de la colección, sin cambiar el login administrativo ni el token Bearer. Los datos actuales corresponden a Jared (ID 8), que ya existe; cambia usuario y correo para crear otra cuenta."
           },
-          "response": []
+          "response": [
+            {
+              "name": "Usuario creado: Jared Flores Guarneros (ID 8)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/usuarios",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "usuarios"
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email}}\",\n  \"rol_id\": {{rol_id}}\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Al recibir 201, guarda los datos del usuario creado en las variables de la colección, sin cambiar el login administrativo ni el token Bearer. Los datos actuales corresponden a Jared (ID 8), que ya existe; cambia usuario y correo para crear otra cuenta."
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\r\n  \"statusCode\": 201,\r\n  \"message\": \"Usuario creado correctamente.\",\r\n  \"dataResponse\": {\r\n    \"id\": 8,\r\n    \"nombre\": \"Jared\",\r\n    \"apellido_paterno\": \"Flores\",\r\n    \"apellido_materno\": \"Guarneros\",\r\n    \"usuario\": \"jflores\",\r\n    \"email\": \"floresjared156@gmail.com\",\r\n    \"activo\": null,\r\n    \"bloqueado\": null,\r\n    \"rol\": {\r\n      \"id\": 1,\r\n      \"codigo\": \"ADMIN\",\r\n      \"nombre\": \"Administrador\"\r\n    }\r\n  },\r\n  \"errorMessageDTO\": null\r\n}"
+            }
+          ],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const body = pm.response.json();",
+                  "    const usuario = body.dataResponse;",
+                  "    if (body.statusCode === 201 && usuario && Number.isInteger(usuario.id) && usuario.id > 0) {",
+                  "        const values = {",
+                  "            usuario_id: String(usuario.id),",
+                  "            usuario_nombre: usuario.nombre,",
+                  "            usuario_apellido_paterno: usuario.apellido_paterno ?? '',",
+                  "            usuario_apellido_materno: usuario.apellido_materno ?? '',",
+                  "            usuario_login: usuario.usuario,",
+                  "            usuario_email: usuario.email,",
+                  "            usuario_email_nuevo: usuario.email,",
+                  "            email_recuperacion: usuario.email",
+                  "        };",
+                  "        if (usuario.rol && usuario.rol.id != null) values.rol_id = String(usuario.rol.id);",
+                  "        Object.entries(values).forEach(([key, value]) => {",
+                  "            if (value != null) pm.collectionVariables.set(key, String(value));",
+                  "        });",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ]
         },
         {
           "name": "Editar usuario",
@@ -451,7 +577,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido_paterno\": \"Perez\",\n  \"apellido_materno\": \"Lopez\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email_nuevo}}\",\n  \"rol_id\": {{rol_id}}\n}",
+              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email_nuevo}}\",\n  \"rol_id\": {{rol_id}}\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -463,7 +589,7 @@
           "response": []
         },
         {
-          "name": "Activar usuario",
+          "name": "Cambiar estado de usuario",
           "request": {
             "method": "PATCH",
             "header": [
@@ -471,44 +597,34 @@
                 "key": "Accept",
                 "value": "application/json",
                 "type": "text"
-              }
-            ],
-            "url": {
-              "raw": "{{base_url}}/usuarios/{{usuario_id}}/activar",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "usuarios",
-                "{{usuario_id}}",
-                "activar"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Inactivar usuario",
-          "request": {
-            "method": "PATCH",
-            "header": [
+              },
               {
-                "key": "Accept",
+                "key": "Content-Type",
                 "value": "application/json",
                 "type": "text"
               }
             ],
             "url": {
-              "raw": "{{base_url}}/usuarios/{{usuario_id}}/inactivar",
+              "raw": "{{base_url}}/usuarios/{{usuario_id}}/estado",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
                 "usuarios",
                 "{{usuario_id}}",
-                "inactivar"
+                "estado"
               ]
-            }
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": {{usuario_activo}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Una sola ruta: usuario_activo=true activa y false inactiva. También admite {\"activo\":\"activo\"} o {\"activo\":\"inactivo\"}. Inactivar revoca el acceso; activar no desbloquea."
           },
           "response": []
         },
@@ -607,12 +723,74 @@
       "name": "Roles",
       "item": [
         {
-          "name": "Consultar roles y permisos",
+          "name": "Listar roles",
           "request": {
             "method": "GET",
             "header": [
               {
                 "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "per_page",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar rol",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{rol_objetivo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{rol_objetivo_id}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Crear rol",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
                 "value": "application/json",
                 "type": "text"
               }
@@ -625,17 +803,203 @@
               "path": [
                 "roles"
               ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"{{rol_codigo}}\",\n  \"nombre\": \"{{rol_nombre}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crea un rol activo y sin permisos. Guarda automáticamente rol_objetivo_id. Después utiliza Asignar permisos."
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const rol = pm.response.json().dataResponse;",
+                  "    if (rol && Number.isInteger(rol.id) && rol.id > 0) {",
+                  "        pm.collectionVariables.set(\"rol_objetivo_id\", String(rol.id));",
+                  "        pm.collectionVariables.set(\"rol_codigo\", rol.codigo);",
+                  "        pm.collectionVariables.set(\"rol_nombre\", rol.nombre);",
+                  "    }",
+                  "}"
+                ]
+              }
             }
+          ]
+        },
+        {
+          "name": "Editar rol",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{rol_objetivo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{rol_objetivo_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"{{rol_codigo}}\",\n  \"nombre\": \"{{rol_nombre}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "ADMIN está protegido. El estado y los permisos se modifican en sus rutas separadas."
+          },
+          "response": []
+        },
+        {
+          "name": "Cambiar estado de rol",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{rol_objetivo_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{rol_objetivo_id}}",
+                "estado"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": {{rol_activo}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "true activa; false inactiva y revoca el acceso de todos sus usuarios. También admite los textos activo/inactivo."
+          },
+          "response": []
+        },
+        {
+          "name": "Asignar permisos al rol",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{rol_objetivo_id}}/permisos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{rol_objetivo_id}}",
+                "permisos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"permisos\": [\n    {\n      \"modulo\": \"USUARIOS\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"desbloquear\": false,\n        \"eliminar\": false,\n        \"reenviar_acceso\": false\n      }\n    },\n    {\n      \"modulo\": \"ROLES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"asignar_permisos\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"PERMISOS\",\n      \"permisos\": {\n        \"consultar\": true\n      }\n    },\n    {\n      \"modulo\": \"BITACORA\",\n      \"permisos\": {\n        \"consultar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_EMPRESAS\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_MARCAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_PILARES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_CATEGORIAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_TIPOS_BENEFICIO\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false\n      }\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Reemplaza todos los permisos del rol. Acciones no enviadas o con false no se conceden. {\"permisos\":[]} retira todos. Solo acepta módulos/acciones del catálogo y booleanos. ADMIN está protegido."
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar rol",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/roles/{{rol_objetivo_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "roles",
+                "{{rol_objetivo_id}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confirmar\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requiere ROLES.ELIMINAR. Rechaza el borrado si tiene usuarios asignados, incluso inactivos. ADMIN no se puede eliminar."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "Módulos y permisos",
+      "name": "Permisos",
       "item": [
         {
-          "name": "Consultar módulos y permisos",
+          "name": "Consultar catálogo fijo de permisos",
           "request": {
             "method": "GET",
             "header": [
@@ -646,12 +1010,42 @@
               }
             ],
             "url": {
-              "raw": "{{base_url}}/modulos",
+              "raw": "{{base_url}}/permisos",
               "host": [
                 "{{base_url}}"
               ],
               "path": [
-                "modulos"
+                "permisos"
+              ]
+            },
+            "description": "Devuelve módulos y acciones disponibles. No permite crear, editar ni eliminar códigos."
+          },
+          "response": []
+        },
+        {
+          "name": "Consultar permisos de un módulo",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/permisos?modulo={{modulo_permisos}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "permisos"
+              ],
+              "query": [
+                {
+                  "key": "modulo",
+                  "value": "{{modulo_permisos}}"
+                }
               ]
             }
           },

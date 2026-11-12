@@ -6,6 +6,7 @@ use App\Models\User;
 use Database\Seeders\DatabaseSeeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
@@ -18,7 +19,12 @@ class AccessSchemaTest extends TestCase
         $this->assertSame(':memory:', config('database.connections.sqlite.database'));
 
         Artisan::call('migrate', ['--path' => 'database/migrations/0001_01_01_000000_create_users_table.php', '--force' => true]);
-        $user = User::factory()->create();
+        DB::table('users')->insert([
+            'name' => 'Usuario anterior', 'email' => 'anterior@example.com',
+            'password' => Hash::make('password'),
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+        $user = User::firstOrFail();
         $original = $user->getAttributes();
         Artisan::call('migrate', ['--force' => true]);
         $user->refresh();
@@ -34,9 +40,9 @@ class AccessSchemaTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         $this->assertSame(1, DB::table('roles')->count());
         $this->assertSame('ADMIN', DB::table('roles')->value('codigo'));
-        $this->assertSame(4, DB::table('modulos')->count());
-        $this->assertSame(17, DB::table('permisos')->count());
-        $this->assertSame(17, DB::table('rol_permiso')->count());
+        $this->assertSame(9, DB::table('modulos')->count());
+        $this->assertSame(35, DB::table('permisos')->count());
+        $this->assertSame(35, DB::table('rol_permiso')->count());
         $this->assertSame(1, User::count());
 
         // Repetir seed no reactiva roles inactivados ni cambia nombres personalizados.

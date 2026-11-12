@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Support\CatalogoPermisos;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +16,8 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $attributes = ['activo' => true, 'bloqueado' => false, 'intentos_fallidos' => 0, 'requiere_establecer_password' => false];
+
     public function rol(): BelongsTo
     {
         return $this->belongsTo(Rol::class, 'rol_id');
@@ -22,21 +25,28 @@ class User extends Authenticatable
 
     public function tienePermiso(string $codigo): bool
     {
-        return $this->rol?->activo === true && $this->rol->permisos()
-            ->join('modulos', 'modulos.id', '=', 'permisos.modulo_id')
-            ->where('permisos.codigo', $codigo)
-            ->where('permisos.activo', true)->where('modulos.activo', true)->exists();
+        if (! $this->rol?->activo || ! in_array($codigo, CatalogoPermisos::codigos(), true)) {
+            return false;
+        }
+
+        return $this->rol->esAdmin() || $this->rol->permisos()->disponibles()->where('permisos.codigo', $codigo)->exists();
     }
 
-    public function datosPublicos(): array
+    public function datosPublicos(bool $incluirPermisos = false): array
     {
-        return [
+        $datos = [
             'id' => $this->id, 'nombre' => $this->name,
             'apellido_paterno' => $this->apellido_paterno, 'apellido_materno' => $this->apellido_materno,
             'usuario' => $this->usuario, 'email' => $this->email,
             'activo' => $this->activo, 'bloqueado' => $this->bloqueado,
             'rol' => $this->rol?->only(['id', 'codigo', 'nombre']),
         ];
+
+        if ($incluirPermisos && ! $this->rol?->esAdmin()) {
+            $datos['permisos'] = $this->rol?->permisosAgrupados() ?? CatalogoPermisos::agrupar([]);
+        }
+
+        return $datos;
     }
 
     /**

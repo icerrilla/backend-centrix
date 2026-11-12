@@ -52,7 +52,7 @@ class AuthController extends Controller
                 $token = $usuario->createToken('centrix', ['*']);
                 $response = ApiResponse::make(200, 'Inicio de sesión correcto.', [
                     'token' => $token->plainTextToken, 'token_type' => 'Bearer',
-                    'expires_in' => config('centrix.inactividad_segundos'), 'usuario' => $usuario->datosPublicos(),
+                    'expires_in' => config('centrix.inactividad_segundos'), 'usuario' => $usuario->datosPublicos(true),
                 ]);
                 $bitacora->contexto($request, 'AUTENTICACION', 'LOGIN', 'Se inició sesión correctamente.', 'EXITOSO');
             }
@@ -70,7 +70,7 @@ class AuthController extends Controller
     {
         $bitacora->contexto($request, 'AUTENTICACION', 'CONSULTAR', 'Se consultaron los datos de la sesión.');
 
-        return ApiResponse::make(200, 'Consulta correcta.', ['usuario' => $request->user()->datosPublicos()]);
+        return ApiResponse::make(200, 'Consulta correcta.', ['usuario' => $request->user()->datosPublicos(true)]);
     }
 
     public function logout(Request $request, Bitacora $bitacora, Sesiones $sesiones)

@@ -37,6 +37,14 @@ class CentrixApiTest extends TestCase
         return ['Authorization' => 'Bearer '.$usuario->createToken('prueba')->plainTextToken];
     }
 
+    private function lector(): User
+    {
+        $rol = Rol::forceCreate(['codigo' => 'LECTOR', 'nombre' => 'Lector', 'activo' => true]);
+        $rol->permisos()->attach(DB::table('permisos')->where('codigo', 'USUARIOS.CONSULTAR')->value('id'));
+
+        return $this->usuario(['rol_id' => $rol->id]);
+    }
+
     public function test_login_contract_case_insensitivity_single_session_and_logout(): void
     {
         $usuario = $this->usuario(['usuario' => 'jperez', 'email' => 'juan@example.com', 'intentos_fallidos' => 2]);
@@ -98,7 +106,7 @@ class CentrixApiTest extends TestCase
 
     public function test_permissions_and_active_role_module_and_permission_are_enforced(): void
     {
-        $usuario = $this->usuario();
+        $usuario = $this->lector();
         $headers = $this->cabeceras($usuario);
         $this->getJson('/api/usuarios', $headers)->assertOk();
         DB::table('permisos')->where('codigo', 'USUARIOS.CONSULTAR')->update(['activo' => false]);
@@ -116,7 +124,7 @@ class CentrixApiTest extends TestCase
     public function test_failed_requests_do_not_extend_inactivity(): void
     {
         $this->freezeTime();
-        $usuario = $this->usuario();
+        $usuario = $this->lector();
         $headers = $this->cabeceras($usuario);
         DB::table('permisos')->where('codigo', 'USUARIOS.CONSULTAR')->update(['activo' => false]);
         $this->travel(9)->minutes();
@@ -181,7 +189,7 @@ class CentrixApiTest extends TestCase
         $usuario = $this->usuario();
         $headers = $this->cabeceras($admin);
         $token = $usuario->createToken('viejo')->plainTextToken;
-        $this->patchJson('/api/usuarios/'.$usuario->id.'/inactivar', [], $headers)->assertOk();
+        $this->patchJson('/api/usuarios/'.$usuario->id.'/estado', ['activo' => false], $headers)->assertOk();
         $this->getJson('/api/me', ['Authorization' => 'Bearer '.$token])->assertUnauthorized();
         $this->postJson('/api/login', ['login' => $usuario->usuario, 'password' => 'password'])->assertForbidden();
         $usuario->forceFill(['bloqueado' => true, 'intentos_fallidos' => 3, 'bloqueado_at' => now()])->save();
@@ -190,7 +198,7 @@ class CentrixApiTest extends TestCase
         $this->assertFalse($usuario->fresh()->bloqueado);
         $this->assertSame(0, $usuario->fresh()->intentos_fallidos);
         $usuario->refresh()->forceFill(['bloqueado' => true])->save();
-        $this->patchJson('/api/usuarios/'.$usuario->id.'/activar', [], $headers)->assertOk();
+        $this->patchJson('/api/usuarios/'.$usuario->id.'/estado', ['activo' => true], $headers)->assertOk();
         $this->assertTrue($usuario->fresh()->bloqueado);
     }
 
@@ -198,7 +206,7 @@ class CentrixApiTest extends TestCase
     {
         $admin = $this->usuario();
         $headers = $this->cabeceras($admin);
-        $this->patchJson('/api/usuarios/'.$admin->id.'/inactivar', [], $headers)->assertStatus(409);
+        $this->patchJson('/api/usuarios/'.$admin->id.'/estado', ['activo' => false], $headers)->assertStatus(409);
         $this->deleteJson('/api/usuarios/'.$admin->id, ['confirmar' => true], $headers)->assertStatus(409);
         $rol = Rol::forceCreate(['codigo' => 'CONSULTA', 'nombre' => 'Consulta', 'activo' => true]);
         $this->putJson('/api/usuarios/'.$admin->id, [
@@ -301,7 +309,7 @@ class CentrixApiTest extends TestCase
         $this->assertSame(0, DB::table('bitacora')->where('accion', 'ELIMINAR')->where('resultado', 'EXITOSO')->count());
     }
 
-    public function test_token_abilities_assignments_and_admin_only_unlock_are_enforced(): void
+    public function test_token_abilities_assignments_and_unlock_permission_are_enforced(): void
     {
         $admin = $this->usuario();
         $limitado = $admin->createToken('limitado', ['USUARIOS.CONSULTAR'])->plainTextToken;
@@ -315,7 +323,7 @@ class CentrixApiTest extends TestCase
         $rol->permisos()->attach(DB::table('permisos')->where('codigo', 'USUARIOS.CONSULTAR')->value('id'));
         $rol->permisos()->attach(DB::table('permisos')->where('codigo', 'USUARIOS.DESBLOQUEAR')->value('id'));
         $this->getJson('/api/usuarios', $headers)->assertOk();
-        $this->patchJson('/api/usuarios/'.$admin->id.'/desbloquear', [], $headers)->assertForbidden();
+        $this->patchJson('/api/usuarios/'.$admin->id.'/desbloquear', [], $headers)->assertOk();
     }
 
     public function test_bootstrap_admin_requires_invitation_and_cannot_be_repeated(): void

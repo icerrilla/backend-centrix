@@ -8,6 +8,7 @@ use App\Services\Bitacora;
 use App\Services\EnlacesPassword;
 use App\Services\Sesiones;
 use App\Support\ApiResponse;
+use App\Support\EstadoCuenta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
@@ -108,9 +109,10 @@ class UsuarioController extends Controller
 
     public function estado(Request $request, int $id, Bitacora $bitacora, Sesiones $sesiones)
     {
-        return DB::transaction(function () use ($request, $id, $bitacora, $sesiones) {
+        $activar = EstadoCuenta::validar($request);
+
+        return DB::transaction(function () use ($request, $id, $bitacora, $sesiones, $activar) {
             $usuario = User::lockForUpdate()->findOrFail($id);
-            $activar = $request->route()->getName() === 'usuarios.activar';
             $this->protegerUltimoAdmin($usuario, $usuario->rol_id, $activar);
             $usuario->activo = $activar;
             $usuario->save();
@@ -126,8 +128,6 @@ class UsuarioController extends Controller
 
     public function desbloquear(Request $request, int $id, Bitacora $bitacora)
     {
-        abort_unless($request->user()->rol?->codigo === 'ADMIN', 403);
-
         return DB::transaction(function () use ($request, $id, $bitacora) {
             $usuario = User::lockForUpdate()->findOrFail($id);
             $usuario->forceFill(['bloqueado' => false, 'intentos_fallidos' => 0, 'bloqueado_at' => null])->save();

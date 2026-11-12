@@ -29,7 +29,7 @@ class SesionCentrix
         return DB::transaction(function () use ($request, $next, $permiso, $encontrado) {
             // Serializa administración de cuentas antes de bloquear actor y destino;
             // evita que dos administradores se retiren mutuamente el último acceso.
-            if ($request->is('api/usuarios*') && ! $request->isMethodSafe()) {
+            if ($request->is('api/usuarios*', 'api/roles*') && ! $request->isMethodSafe()) {
                 Rol::where('codigo', 'ADMIN')->lockForUpdate()->first();
             }
             $usuario = User::query()->lockForUpdate()->find($encontrado->tokenable_id);
