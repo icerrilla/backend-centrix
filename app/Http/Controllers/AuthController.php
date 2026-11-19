@@ -23,6 +23,7 @@ class AuthController extends Controller
             // Los usuarios nuevos no admiten @: impide ambigüedad usuario/correo.
             $campo = str_contains($login, '@') ? 'email' : 'usuario';
             $usuario = User::whereRaw('LOWER('.$campo.') = ?', [$login])->lockForUpdate()->first();
+            $antes = $usuario?->datosAuditoria() ?? [];
             $bitacora->contexto($request, 'AUTENTICACION', 'LOGIN', 'No se pudo iniciar sesión.', 'RECHAZADO');
             // Hash de costo equivalente incluso cuando el identificador no existe.
             $correcta = Hash::check($input['password'], $usuario?->password ?? Hash::make('credencial-no-utilizable'));
@@ -60,6 +61,7 @@ class AuthController extends Controller
             if ($usuario && $correcta && $response->getStatusCode() === 200) {
                 $request->setUserResolver(fn () => $usuario);
             }
+            $bitacora->detalle($request, 'USUARIO', $usuario?->id, $antes, $usuario?->datosAuditoria() ?? [], $usuario && ! $correcta);
             $bitacora->registrar($request, $response->getStatusCode());
 
             return $response;
@@ -76,6 +78,7 @@ class AuthController extends Controller
     public function logout(Request $request, Bitacora $bitacora, Sesiones $sesiones)
     {
         $sesiones->revocar($request->user());
+        $bitacora->detalle($request, 'USUARIO', $request->user()->id);
         $bitacora->contexto($request, 'AUTENTICACION', 'LOGOUT', 'Se cerró la sesión.');
 
         return ApiResponse::make(200, 'Sesión cerrada correctamente.');

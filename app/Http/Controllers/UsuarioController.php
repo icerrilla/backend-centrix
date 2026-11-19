@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class UsuarioController extends Controller
 {
@@ -23,6 +24,7 @@ class UsuarioController extends Controller
             'buscar' => ['sometimes', 'nullable', 'string', 'max:100'],
             'activo' => ['sometimes', 'boolean'], 'bloqueado' => ['sometimes', 'boolean'],
             'rol_id' => ['sometimes', 'integer', 'min:1'],
+            'estado' => ['sometimes', Rule::in(['INACTIVO', 'BLOQUEADO', 'PENDIENTE', 'ACTIVO'])],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'], 'page' => ['sometimes', 'integer', 'min:1'],
         ]);
         $query = User::with('rol')->orderBy('id');
@@ -37,6 +39,16 @@ class UsuarioController extends Controller
         foreach (['activo', 'bloqueado', 'rol_id'] as $campo) {
             if (array_key_exists($campo, $filtros)) {
                 $query->where($campo, $filtros[$campo]);
+            }
+        }
+        if (isset($filtros['estado'])) {
+            $estado = $filtros['estado'];
+            $query->where('activo', $estado !== 'INACTIVO');
+            if ($estado !== 'INACTIVO') {
+                $query->where('bloqueado', $estado === 'BLOQUEADO');
+                if ($estado !== 'BLOQUEADO') {
+                    $query->where('requiere_establecer_password', $estado === 'PENDIENTE');
+                }
             }
         }
         $pagina = $query->paginate($filtros['per_page'] ?? 20);
@@ -61,13 +73,23 @@ class UsuarioController extends Controller
         $datos = $this->datos($request);
 
         return DB::transaction(function () use ($request, $datos, $bitacora, $enlaces) {
+            $ambitos = $datos['ambito_ids'] ?? [];
+            unset($datos['ambito_ids']);
             $this->validarRol($datos['rol_id']);
             $usuario = new User;
             $usuario->forceFill($datos + ['password' => Str::random(64), 'requiere_establecer_password' => true])->save();
-            $enlaces->enviar($usuario);
-            $bitacora->contexto($request, 'USUARIOS', 'CREAR', 'Se creó el usuario '.$usuario->name.' y se envió su enlace de acceso.');
+            $usuario->ambitosAsignados()->sync($ambitos);
+            $enviado = false;
+            try {
+                DB::transaction(fn () => $enlaces->enviar($usuario));
+                $enviado = true;
+            } catch (Throwable) {
+                // El alta persiste. No registrar excepciones SMTP que puedan incluir el enlace.
+            }
+            $bitacora->contexto($request, 'USUARIOS', 'CREAR', 'Se creó el usuario '.$usuario->name.'. '.($enviado ? 'Se envió su enlace de acceso.' : 'Quedó pendiente de envío del enlace de acceso.'));
+            $bitacora->detalle($request, 'USUARIO', $usuario->id, [], $usuario->datosAuditoria());
 
-            return ApiResponse::make(201, 'Usuario creado correctamente.', $usuario->datosPublicos());
+            return ApiResponse::make(201, $enviado ? 'Usuario creado correctamente.' : 'Usuario creado. No se pudo enviar el enlace; puedes reenviarlo después.', $usuario->datosPublicos() + ['acceso_enviado' => $enviado]);
         });
     }
 
@@ -78,6 +100,9 @@ class UsuarioController extends Controller
 
         return DB::transaction(function () use ($request, $usuario, $datos, $bitacora, $sesiones) {
             $usuario = User::lockForUpdate()->findOrFail($usuario->id);
+            $antes = $usuario->datosAuditoria();
+            $ambitos = $datos['ambito_ids'] ?? null;
+            unset($datos['ambito_ids']);
             $this->validarRol($datos['rol_id']);
             $this->protegerUltimoAdmin($usuario, $datos['rol_id'], $usuario->activo);
             $cambios = [];
@@ -96,12 +121,16 @@ class UsuarioController extends Controller
             }
             $cambiaAcceso = $cambiaEmail || $usuario->usuario !== $datos['usuario'] || $usuario->rol_id !== (int) $datos['rol_id'];
             $usuario->forceFill($datos)->save();
+            if ($ambitos !== null) {
+                $usuario->ambitosAsignados()->sync($ambitos);
+            }
             $usuario->unsetRelation('rol');
             if ($cambiaAcceso) {
                 $sesiones->revocar($usuario);
             }
             $descripcion = $cambios ? 'Se actualizó '.implode('; ', $cambios).' del usuario '.$usuario->name.'.' : 'Se revisaron los datos del usuario '.$usuario->name.' sin cambios.';
             $bitacora->contexto($request, 'USUARIOS', 'EDITAR', $descripcion);
+            $bitacora->detalle($request, 'USUARIO', $usuario->id, $antes, $usuario->datosAuditoria());
 
             return ApiResponse::make(200, 'Usuario actualizado correctamente.', $usuario->datosPublicos());
         });
@@ -113,6 +142,8 @@ class UsuarioController extends Controller
 
         return DB::transaction(function () use ($request, $id, $bitacora, $sesiones, $activar) {
             $usuario = User::lockForUpdate()->findOrFail($id);
+            abort_if(! $activar && $request->user()->id === $id, 409, 'No puedes inactivar tu propia cuenta.');
+            $antes = $usuario->datosAuditoria();
             $this->protegerUltimoAdmin($usuario, $usuario->rol_id, $activar);
             $usuario->activo = $activar;
             $usuario->save();
@@ -121,6 +152,7 @@ class UsuarioController extends Controller
                 Password::deleteToken($usuario);
             }
             $bitacora->contexto($request, 'USUARIOS', $activar ? 'ACTIVAR' : 'INACTIVAR', 'Se '.($activar ? 'activó' : 'inactivó').' la cuenta de '.$usuario->name.'.');
+            $bitacora->detalle($request, 'USUARIO', $usuario->id, $antes, $usuario->datosAuditoria());
 
             return ApiResponse::make(200, 'Estado actualizado correctamente.', $usuario->datosPublicos());
         });
@@ -130,8 +162,10 @@ class UsuarioController extends Controller
     {
         return DB::transaction(function () use ($request, $id, $bitacora) {
             $usuario = User::lockForUpdate()->findOrFail($id);
+            $antes = $usuario->datosAuditoria();
             $usuario->forceFill(['bloqueado' => false, 'intentos_fallidos' => 0, 'bloqueado_at' => null])->save();
             $bitacora->contexto($request, 'USUARIOS', 'DESBLOQUEAR', 'Se desbloqueó la cuenta de '.$usuario->name.'.');
+            $bitacora->detalle($request, 'USUARIO', $usuario->id, $antes, $usuario->datosAuditoria());
 
             return ApiResponse::make(200, 'Cuenta desbloqueada correctamente.', $usuario->datosPublicos());
         });
@@ -143,6 +177,8 @@ class UsuarioController extends Controller
 
         return DB::transaction(function () use ($request, $id, $bitacora, $sesiones) {
             $usuario = User::lockForUpdate()->findOrFail($id);
+            abort_if($request->user()->id === $id, 409, 'No puedes eliminar tu propia cuenta.');
+            $antes = $usuario->datosAuditoria();
             $this->protegerUltimoAdmin($usuario, null, false);
             // Las futuras relaciones de negocio deben usar FK restrictivas, nunca cascada.
             // Hoy solo existen tokens, sesiones, recuperación y la referencia nullable de bitácora.
@@ -150,10 +186,8 @@ class UsuarioController extends Controller
             Password::deleteToken($usuario);
             $nombre = $usuario->name;
             $usuario->delete();
-            if ($request->user()->id === $usuario->id) {
-                $request->user()->exists = false;
-            }
             $bitacora->contexto($request, 'USUARIOS', 'ELIMINAR', 'Se eliminó el usuario '.$nombre.'.');
+            $bitacora->detalle($request, 'USUARIO', $id, $antes, []);
 
             return ApiResponse::make(200, 'Usuario eliminado correctamente.');
         });
@@ -194,13 +228,20 @@ class UsuarioController extends Controller
             'rol_id' => ['required', 'integer', Rule::exists('roles', 'id')->where('activo', true)],
             'password' => ['prohibited'], 'password_confirmation' => ['prohibited'],
             'activo' => ['prohibited'], 'bloqueado' => ['prohibited'], 'intentos_fallidos' => ['prohibited'],
+            'ambito_ids' => ['sometimes', 'array', 'list'],
+            'ambito_ids.*' => ['required', 'integer', 'distinct', Rule::exists('embotelladores', 'id')->where('activo', true)],
         ]);
 
-        return [
+        $datos = [
             'name' => $validados['nombre'], 'apellido_paterno' => $validados['apellido_paterno'] ?? null,
             'apellido_materno' => $validados['apellido_materno'] ?? null, 'usuario' => $validados['usuario'],
             'email' => $validados['email'], 'rol_id' => (int) $validados['rol_id'],
         ];
+        if (array_key_exists('ambito_ids', $validados)) {
+            $datos['ambito_ids'] = $validados['ambito_ids'];
+        }
+
+        return $datos;
     }
 
     private function validarRol(int $id): void

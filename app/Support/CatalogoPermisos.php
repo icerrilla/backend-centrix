@@ -11,11 +11,12 @@ class CatalogoPermisos
             'ROLES' => ['Roles', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ASIGNAR_PERMISOS', 'ELIMINAR']],
             'PERMISOS' => ['Permisos', ['CONSULTAR']],
             'BITACORA' => ['Bitácora', ['CONSULTAR']],
-            'CATALOGO_EMPRESAS' => ['Empresas', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR']],
-            'CATALOGO_MARCAS' => ['Marcas', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR']],
-            'CATALOGO_PILARES' => ['Pilares', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR']],
-            'CATALOGO_CATEGORIAS' => ['Categorías', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR']],
-            'CATALOGO_TIPOS_BENEFICIO' => ['Tipos de beneficio', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR']],
+            'CATALOGO_EMBOTELLADORES' => ['Embotelladores', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'CATALOGO_MARCAS' => ['Marcas', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'CATALOGO_PILARES' => ['Pilares', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'CATALOGO_CATEGORIAS' => ['Categorías', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'CATALOGO_TIPOS_BENEFICIO' => ['Tipos de beneficio', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'PATROCINIOS' => ['Patrocinios', ['CONSULTAR', 'CREAR', 'EDITAR', 'PUBLICAR', 'ARCHIVAR']],
         ];
     }
 

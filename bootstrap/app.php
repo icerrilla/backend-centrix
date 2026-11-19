@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ValidacionPublicacion;
 use App\Http\Middleware\AuditarSolicitudes;
 use App\Http\Middleware\RequerirHttps;
 use App\Http\Middleware\SesionCentrix;
@@ -31,6 +32,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
             if ($exception instanceof ValidationException) {
+                if ($exception instanceof ValidacionPublicacion) {
+                    return ApiResponse::make(422, $exception->mensajePublico, null, $exception->errors());
+                }
                 $errors = array_map(fn () => ['Revisa el valor proporcionado.'], $exception->errors());
 
                 return ApiResponse::make(422, 'Los datos proporcionados no son válidos.', null, $errors);
@@ -45,6 +49,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 404 => 'No se encontró el recurso solicitado.',
                 405 => 'La operación solicitada no está disponible.',
                 409 => $exception->getMessage() ?: 'La operación no se puede completar.',
+                413 => 'El archivo supera el tamaño permitido. El máximo es 20 MB.',
                 429 => 'Demasiados intentos. Intenta más tarde.',
                 503 => 'El servicio no está disponible.',
                 default => $status >= 500 ? 'Ocurrió un error interno del servidor.' : 'No se pudo completar la solicitud.',

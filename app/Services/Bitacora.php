@@ -3,11 +3,31 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Support\CatalogosNegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Bitacora
 {
+    public function detalle(Request $request, string $tipo, ?int $id = null, array $anterior = [], array $nuevo = [], bool $persistidoEnError = false): void
+    {
+        $cambios = [];
+        $prohibidos = ['password', 'password_confirmation', 'remember_token', 'token', 'reset_token'];
+        foreach (array_unique([...array_keys($anterior), ...array_keys($nuevo)]) as $campo) {
+            if (in_array($campo, $prohibidos, true)) {
+                continue;
+            }
+            $antes = $anterior[$campo] ?? null;
+            $despues = $nuevo[$campo] ?? null;
+            $antes = json_decode(json_encode($antes, JSON_THROW_ON_ERROR), true);
+            $despues = json_decode(json_encode($despues, JSON_THROW_ON_ERROR), true);
+            if ($antes !== $despues) {
+                $cambios[] = ['campo' => $campo, 'anterior' => $antes, 'nuevo' => $despues];
+            }
+        }
+        $request->attributes->set('auditoria_detalle', ['registro_tipo' => $tipo, 'registro_id' => $id, 'cambios' => $cambios, 'persistido_en_error' => $persistidoEnError]);
+    }
+
     public function contexto(Request $request, string $modulo, string $accion, string $descripcion, ?string $resultado = null): void
     {
         $request->attributes->set('auditoria', compact('modulo', 'accion', 'descripcion', 'resultado'));
@@ -22,6 +42,7 @@ class Bitacora
             return;
         }
         $contexto = array_replace($this->contextoDeRuta($request), $request->attributes->get('auditoria', []));
+        $detalle = $request->attributes->get('auditoria_detalle', []);
         $usuario = $request->user();
         $login = $request->attributes->get('login_auditoria', $usuario?->usuario ?? $usuario?->email);
         $accion = $contexto['accion'] ?? ($request->isMethod('GET') ? 'CONSULTAR' : 'SOLICITUD');
@@ -43,6 +64,10 @@ class Bitacora
             'accion' => $accion,
             'resultado' => $status >= 500 ? 'ERROR' : ($contexto['resultado'] ?? ($status < 400 ? 'EXITOSO' : 'RECHAZADO')),
             'descripcion' => $descripcion, 'created_at' => now(),
+            'registro_tipo' => $detalle['registro_tipo'] ?? $this->tipoDeRuta($request),
+            'registro_id' => $detalle['registro_id'] ?? (is_numeric($request->route('id')) ? (int) $request->route('id') : null),
+            'cambios' => json_encode(($status < 400 || ($status < 500 && ($detalle['persistido_en_error'] ?? false))) ? ($detalle['cambios'] ?? []) : [], JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE),
+            'ip' => $request->ip(),
         ]);
         $request->attributes->set('bitacora_registro_id', $registroId);
     }
@@ -50,6 +75,14 @@ class Bitacora
     private function contextoDeRuta(Request $request): array
     {
         $nombre = $request->route()?->getName();
+        if ($request->route()?->defaults['catalogo'] ?? null) {
+            $catalogo = CatalogosNegocio::todos()[$request->route()->defaults['catalogo']];
+
+            return ['modulo' => $catalogo['modulo'], 'accion' => $this->accionRuta($nombre)];
+        }
+        if (is_string($nombre) && str_starts_with($nombre, 'patrocinios.')) {
+            return ['modulo' => 'PATROCINIOS', 'accion' => $this->accionRuta($nombre)];
+        }
         if (is_string($nombre) && str_starts_with($nombre, 'auth.')) {
             return ['modulo' => 'AUTENTICACION', 'accion' => match ($nombre) {
                 'auth.login' => 'LOGIN', 'auth.logout' => 'LOGOUT',
@@ -76,6 +109,34 @@ class Bitacora
             $nombre === 'password.establecer' => ['modulo' => 'AUTENTICACION', 'accion' => 'CONSULTAR'],
             $request->is('up') => ['modulo' => 'SISTEMA', 'accion' => 'CONSULTAR'],
             default => [],
+        };
+    }
+
+    private function accionRuta(?string $nombre): string
+    {
+        return match (last(explode('.', $nombre ?? ''))) {
+            'index', 'show', 'imagen.ver' => 'CONSULTAR', 'store' => 'CREAR', 'update' => 'EDITAR',
+            'estado' => 'CAMBIAR_ESTADO', 'destroy' => 'ELIMINAR', 'imagen', 'orden' => 'EDITAR', default => 'CONSULTAR',
+        };
+    }
+
+    private function tipoDeRuta(Request $request): string
+    {
+        $nombre = $request->route()?->getName() ?? '';
+        $catalogo = $request->route()?->defaults['catalogo'] ?? null;
+        if ($catalogo) {
+            return match ($catalogo) {
+                'pilares' => 'PILAR', 'marcas' => 'MARCA', 'categorias' => 'CATEGORIA',
+                'tipos-beneficio' => 'TIPO_BENEFICIO', 'embotelladores' => 'EMBOTELLADOR',
+            };
+        }
+
+        return match (true) {
+            str_starts_with($nombre, 'usuarios.'), str_starts_with($nombre, 'auth.') => 'USUARIO',
+            str_starts_with($nombre, 'roles.') => 'ROL',
+            str_starts_with($nombre, 'patrocinios.') => 'PATROCINIO',
+            in_array($nombre, ['permisos.index', 'modulos.index'], true) => 'PERMISO',
+            $nombre === 'bitacora.index' => 'BITACORA', default => 'SISTEMA',
         };
     }
 }

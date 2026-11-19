@@ -1,5 +1,7 @@
 # Centrix: autenticación y administración de usuarios
 
+> Entrega vigente: [semana2-cpanel.md](semana2-cpanel.md). Incluye catálogos, ámbitos, patrocinios y bitácora de trece columnas con IP y cambios, que sustituyen los acuerdos iniciales de este documento.
+
 > Actualización de roles y permisos: los contratos vigentes, el catálogo de 35 permisos, ADMIN protegido, estado unificado y pasos de subida están en [roles-permisos.md](roles-permisos.md). Este documento conserva el contexto de la primera entrega; la actualización sustituye sus referencias a los 17 permisos iniciales y a las rutas separadas activar/inactivar.
 
 ## Estado de la entrega

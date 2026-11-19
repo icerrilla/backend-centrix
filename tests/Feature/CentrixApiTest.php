@@ -253,12 +253,12 @@ class CentrixApiTest extends TestCase
         config(['mail.default' => 'log']);
         $this->postJson('/api/usuarios', [
             'nombre' => 'No guardar', 'usuario' => 'noguardar', 'email' => 'noguardar@example.com', 'rol_id' => $admin->rol_id,
-        ], $headers)->assertStatus(503);
-        $this->assertDatabaseMissing('users', ['usuario' => 'noguardar']);
+        ], $headers)->assertCreated()->assertJsonPath('dataResponse.estado', 'PENDIENTE')->assertJsonPath('dataResponse.acceso_enviado', false);
+        $this->assertDatabaseHas('users', ['usuario' => 'noguardar', 'requiere_establecer_password' => true]);
         $this->travelBack();
     }
 
-    public function test_all_http_results_are_audited_once_without_ip_or_user_agent(): void
+    public function test_all_http_results_are_audited_once_with_structured_details(): void
     {
         $admin = $this->usuario();
         $headers = $this->cabeceras($admin);
@@ -277,6 +277,7 @@ class CentrixApiTest extends TestCase
         $this->assertSame(1, DB::table('bitacora')->where('resultado', 'ERROR')->count());
         $this->assertSame([
             'id', 'usuario_id', 'usuario_nombre', 'usuario_login', 'modulo', 'accion', 'resultado', 'descripcion', 'created_at',
+            'registro_tipo', 'registro_id', 'cambios', 'ip',
         ], Schema::getColumnListing('bitacora'));
     }
 

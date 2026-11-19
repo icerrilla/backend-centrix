@@ -1,5 +1,7 @@
 # Roles y permisos de Centrix
 
+> Actualización vigente: [semana2-cpanel.md](semana2-cpanel.md). El catálogo ahora tiene 40 permisos, usa CATALOGO_EMBOTELLADORES, incluye PATROCINIOS y crea OPERADOR/CLIENTE sin permisos automáticos. El ZIP anterior fue sustituido por centrix-semana2-cpanel.zip.
+
 ## Alcance
 
 CRUD independiente de roles, catálogo fijo de permisos y permisos agrupados por módulo. Se conservaron usuarios, roles, tablas y asignaciones existentes. No se ejecutaron cambios en MySQL local ni en producción: la validación usa SQLite en memoria. Los cinco catálogos de negocio solo tienen sus códigos preparados; sus endpoints CRUD quedan para otra etapa.

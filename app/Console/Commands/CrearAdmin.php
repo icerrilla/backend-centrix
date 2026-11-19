@@ -48,6 +48,9 @@ class CrearAdmin extends Command
                 'usuario_id' => null, 'usuario_nombre' => null, 'usuario_login' => null,
                 'modulo' => 'USUARIOS', 'accion' => 'CREAR', 'resultado' => 'EXITOSO',
                 'descripcion' => 'Se creó el administrador inicial '.$usuario->name.' desde la configuración del sistema.', 'created_at' => now(),
+                'registro_tipo' => 'USUARIO', 'registro_id' => $usuario->id, 'cambios' => json_encode([
+                    ['campo' => 'estado', 'anterior' => null, 'nuevo' => 'PENDIENTE'],
+                ], JSON_THROW_ON_ERROR), 'ip' => null,
             ]);
         });
         $this->info('Administrador creado. Se envió el enlace para establecer su contraseña.');

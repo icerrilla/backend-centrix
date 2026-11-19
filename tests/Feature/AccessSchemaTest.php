@@ -38,11 +38,11 @@ class AccessSchemaTest extends TestCase
 
         $this->seed(DatabaseSeeder::class);
         $this->seed(DatabaseSeeder::class);
-        $this->assertSame(1, DB::table('roles')->count());
+        $this->assertSame(3, DB::table('roles')->count());
         $this->assertSame('ADMIN', DB::table('roles')->value('codigo'));
-        $this->assertSame(9, DB::table('modulos')->count());
-        $this->assertSame(35, DB::table('permisos')->count());
-        $this->assertSame(35, DB::table('rol_permiso')->count());
+        $this->assertSame(10, DB::table('modulos')->count());
+        $this->assertSame(45, DB::table('permisos')->count());
+        $this->assertSame(45, DB::table('rol_permiso')->count());
         $this->assertSame(1, User::count());
 
         // Repetir seed no reactiva roles inactivados ni cambia nombres personalizados.
@@ -51,7 +51,7 @@ class AccessSchemaTest extends TestCase
         $this->assertEquals(0, DB::table('roles')->value('activo'));
         $this->assertSame('Nombre personalizado', DB::table('roles')->value('nombre'));
 
-        $this->assertCount(9, Schema::getColumnListing('bitacora'));
+        $this->assertCount(13, Schema::getColumnListing('bitacora'));
         DB::table('bitacora')->insert([
             'usuario_id' => $user->id, 'usuario_nombre' => $user->name,
             'modulo' => 'USUARIOS', 'accion' => 'ELIMINAR',

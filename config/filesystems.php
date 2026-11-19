@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Los archivos privados solo salen por los controladores con autorización.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],

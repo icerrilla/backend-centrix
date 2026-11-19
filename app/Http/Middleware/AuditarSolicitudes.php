@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Services\Bitacora;
+use App\Services\Imagenes;
 use App\Support\ApiResponse;
 use Closure;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -27,7 +28,7 @@ class AuditarSolicitudes
         }
         // El sitio inicial sigue disponible antes de instalar el esquema.
         try {
-            $lista = Schema::hasTable('bitacora');
+            $lista = Schema::hasColumns('bitacora', ['registro_tipo', 'registro_id', 'cambios', 'ip']);
         } catch (Throwable) {
             $lista = false;
         }
@@ -43,6 +44,9 @@ class AuditarSolicitudes
         }
         if ($lista) {
             app(Bitacora::class)->registrar($request, $response->getStatusCode());
+        }
+        if ($response->getStatusCode() >= 400 && $request->attributes->has('imagenes_nuevas')) {
+            app(Imagenes::class)->limpiarFallidos($request);
         }
 
         return $response;

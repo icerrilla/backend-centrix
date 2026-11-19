@@ -24,6 +24,7 @@ class PasswordController extends Controller
 
         return DB::transaction(function () use ($request, $enlaces, $bitacora, $input) {
             $usuario = User::whereRaw('LOWER(email) = ?', [mb_strtolower($input['email'])])->lockForUpdate()->first();
+            $bitacora->detalle($request, 'USUARIO', $usuario?->id);
             if ($usuario && $usuario->activo && ! $usuario->bloqueado && $usuario->rol?->activo) {
                 $enlaces->enviar($usuario);
             }
@@ -44,6 +45,8 @@ class PasswordController extends Controller
 
         return DB::transaction(function () use ($request, $sesiones, $bitacora, $input) {
             $usuario = User::whereRaw('LOWER(email) = ?', [mb_strtolower($input['email'])])->lockForUpdate()->first();
+            $antes = $usuario?->datosAuditoria() ?? [];
+            $bitacora->detalle($request, 'USUARIO', $usuario?->id);
             $valido = $usuario && $usuario->activo && ! $usuario->bloqueado && $usuario->rol?->activo
                 && Password::tokenExists($usuario, $input['token']);
             if (! $valido) {
@@ -57,6 +60,7 @@ class PasswordController extends Controller
             Password::deleteToken($usuario);
             // Restablecer contraseña no desbloquea ni reactiva cuentas.
             $bitacora->contexto($request, 'AUTENTICACION', 'ESTABLECER_PASSWORD', 'Se estableció la contraseña de la cuenta.');
+            $bitacora->detalle($request, 'USUARIO', $usuario->id, $antes, $usuario->datosAuditoria());
             $bitacora->registrar($request, 200);
 
             return ApiResponse::make(200, 'Contraseña establecida correctamente.');

@@ -58,6 +58,7 @@ class RolController extends Controller
             $rol = new Rol;
             $rol->forceFill($datos)->save();
             $bitacora->contexto($request, 'ROLES', 'CREAR', 'Se creó el rol '.$rol->nombre.'.');
+            $bitacora->detalle($request, 'ROL', $rol->id, [], $rol->only(['codigo', 'nombre', 'activo']));
 
             return ApiResponse::make(201, 'Rol creado correctamente.', $rol->datosPublicos());
         });
@@ -68,11 +69,13 @@ class RolController extends Controller
         return DB::transaction(function () use ($request, $id, $bitacora) {
             $rol = Rol::lockForUpdate()->findOrFail($id);
             $this->editable($rol);
+            $antes = $rol->only(['codigo', 'nombre', 'activo']);
             $datos = $this->datos($request, $rol);
             $anterior = $rol->nombre;
             $codigoAnterior = $rol->codigo;
             $rol->forceFill($datos)->save();
             $bitacora->contexto($request, 'ROLES', 'EDITAR', 'Se actualizó el rol de «'.$anterior.'» ('.$codigoAnterior.') a «'.$rol->nombre.'» ('.$rol->codigo.').');
+            $bitacora->detalle($request, 'ROL', $id, $antes, $rol->only(['codigo', 'nombre', 'activo']));
 
             return ApiResponse::make(200, 'Rol actualizado correctamente.', $rol->datosPublicos());
         });
@@ -85,6 +88,7 @@ class RolController extends Controller
         return DB::transaction(function () use ($request, $id, $bitacora, $sesiones, $activo) {
             $rol = Rol::lockForUpdate()->findOrFail($id);
             $this->editable($rol);
+            $anterior = $rol->activo;
             $rol->activo = $activo;
             $rol->save();
             if (! $activo) {
@@ -94,6 +98,7 @@ class RolController extends Controller
                 }
             }
             $bitacora->contexto($request, 'ROLES', $activo ? 'ACTIVAR' : 'INACTIVAR', 'Se '.($activo ? 'activó' : 'inactivó').' el rol '.$rol->nombre.'.');
+            $bitacora->detalle($request, 'ROL', $id, ['activo' => $anterior], ['activo' => $activo]);
 
             return ApiResponse::make(200, 'Estado del rol actualizado correctamente.', $rol->datosPublicos());
         });
@@ -141,6 +146,7 @@ class RolController extends Controller
                 $descripcion .= ' Se retiraron: '.implode(', ', array_map(CatalogoPermisos::descripcion(...), $retirados)).'.';
             }
             $bitacora->contexto($request, 'ROLES', 'ASIGNAR_PERMISOS', $descripcion);
+            $bitacora->detalle($request, 'ROL', $id, ['permisos' => $anteriores], ['permisos' => $nuevos]);
 
             return ApiResponse::make(200, 'Permisos asignados correctamente.', $rol->datosPublicos());
         });
@@ -155,8 +161,10 @@ class RolController extends Controller
             $this->editable($rol);
             abort_if($rol->usuarios()->exists(), 409, 'El rol tiene usuarios asignados y no se puede eliminar.');
             $nombre = $rol->nombre;
+            $antes = $rol->datosPublicos();
             $rol->delete();
             $bitacora->contexto($request, 'ROLES', 'ELIMINAR', 'Se eliminó el rol '.$nombre.'.');
+            $bitacora->detalle($request, 'ROL', $id, $antes, []);
 
             return ApiResponse::make(200, 'Rol eliminado correctamente.');
         });

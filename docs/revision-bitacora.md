@@ -1,5 +1,7 @@
 # Revisión de bitácora — 12 de noviembre de 2026
 
+> Informe histórico. La [entrega de semana 2](semana2-cpanel.md) amplía la bitácora a trece columnas con registro_tipo, registro_id, cambios e ip, y extiende esta cobertura a los nuevos endpoints. El paquete incremental anterior se sustituyó por centrix-semana2-cpanel.zip.
+
 ## Resultado
 
 Las 23 rutas API pasan por AuditarSolicitudes y las rutas protegidas también por SesionCentrix. Los controladores describen sus operaciones; el servicio Bitacora evita duplicados. Se añadieron seis pruebas de integración que verifican las rutas reales, las páginas, salud, CORS y errores. La suite completa terminó con 41 pruebas aprobadas y 767 verificaciones, usando SQLite en memoria y notificaciones simuladas. No se enviaron peticiones a producción ni se modificaron datos de MySQL.

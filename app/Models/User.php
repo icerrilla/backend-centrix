@@ -7,6 +7,7 @@ use App\Support\CatalogoPermisos;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -21,6 +22,32 @@ class User extends Authenticatable
     public function rol(): BelongsTo
     {
         return $this->belongsTo(Rol::class, 'rol_id');
+    }
+
+    public function ambitosAsignados(): BelongsToMany
+    {
+        return $this->belongsToMany(Embotellador::class, 'usuario_embotellador', 'usuario_id', 'embotellador_id');
+    }
+
+    public function ambitoIdsVisibles(): array
+    {
+        return array_values(array_unique([
+            Embotellador::nacional()->id, ...$this->ambitosAsignados()->pluck('embotelladores.id')->all(),
+        ]));
+    }
+
+    public function estado(): string
+    {
+        return match (true) {
+            ! $this->activo => 'INACTIVO', $this->bloqueado => 'BLOQUEADO',
+            $this->requiere_establecer_password => 'PENDIENTE', default => 'ACTIVO',
+        };
+    }
+
+    public function datosAuditoria(): array
+    {
+        return $this->only(['name', 'apellido_paterno', 'apellido_materno', 'usuario', 'email', 'rol_id', 'activo', 'bloqueado', 'intentos_fallidos', 'ultimo_acceso_at'])
+            + ['estado' => $this->estado(), 'ambito_ids' => $this->ambitoIdsVisibles()];
     }
 
     public function tienePermiso(string $codigo): bool
@@ -39,6 +66,9 @@ class User extends Authenticatable
             'apellido_paterno' => $this->apellido_paterno, 'apellido_materno' => $this->apellido_materno,
             'usuario' => $this->usuario, 'email' => $this->email,
             'activo' => $this->activo, 'bloqueado' => $this->bloqueado,
+            'estado' => $this->estado(), 'ultimo_acceso_at' => $this->ultimo_acceso_at?->toISOString(),
+            'created_at' => $this->created_at?->toISOString(),
+            'ambitos' => Embotellador::whereIn('id', $this->ambitoIdsVisibles())->orderByDesc('es_nacional')->orderBy('nombre')->get(['id', 'nombre'])->toArray(),
             'rol' => $this->rol?->only(['id', 'codigo', 'nombre']),
         ];
 
