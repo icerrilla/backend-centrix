@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\ArchivosPrivados;
 use App\Services\Bitacora;
 use App\Services\Imagenes;
 use App\Support\ApiResponse;
@@ -44,6 +45,9 @@ class AuditarSolicitudes
         }
         if ($lista) {
             app(Bitacora::class)->registrar($request, $response->getStatusCode());
+        }
+        if ($response->getStatusCode() >= 400 && $request->attributes->has('archivos_nuevos')) {
+            app(ArchivosPrivados::class)->limpiar($request);
         }
         if ($response->getStatusCode() >= 400 && $request->attributes->has('imagenes_nuevas')) {
             app(Imagenes::class)->limpiarFallidos($request);

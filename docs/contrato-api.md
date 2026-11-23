@@ -1,10 +1,10 @@
 # Centrix — Referencia de la API
 
-Formato de consulta por endpoint, al estilo Swagger. Actualizado: 17/11/2026. No es una especificación OpenAPI ni instala Swagger en el servidor.
+Formato de consulta por endpoint, al estilo Swagger. Actualizado: 23/11/2026. No es una especificación OpenAPI ni instala Swagger en el servidor.
 
 **Servidor:** `https://backend-centrix.podium-sm.com/api`
 
-**Contenido:** 65 operaciones HTTP únicas en once módulos. La colección tiene 69 peticiones porque incluye variantes de filtros y omite el alias `/modulos`.
+**Contenido:** 95 operaciones HTTP únicas. La colección tiene 99 peticiones en diecisiete carpetas porque incluye variantes de filtros y omite el alias `/modulos`.
 
 ## Autenticación y formato
 
@@ -122,7 +122,8 @@ Ejemplo de entrada (las variables se resuelven en Postman):
         "id": 1,
         "codigo": "ADMIN",
         "nombre": "Administrador"
-      }
+      },
+      "permisos_extra": []
     }
   },
   "errorMessageDTO": null
@@ -222,7 +223,8 @@ Sesión Bearer.
         "id": 1,
         "codigo": "ADMIN",
         "nombre": "Administrador"
-      }
+      },
+      "permisos_extra": []
     }
   },
   "errorMessageDTO": null
@@ -495,7 +497,8 @@ Sesión Bearer. Permiso: `USUARIOS.CONSULTAR`.
           "id": 2,
           "codigo": "OPERADOR",
           "nombre": "Operador"
-        }
+        },
+        "permisos_extra": []
       }
     ],
     "paginacion": {
@@ -592,7 +595,8 @@ Sesión Bearer. Permiso: `USUARIOS.CONSULTAR`.
       "id": 2,
       "codigo": "OPERADOR",
       "nombre": "Operador"
-    }
+    },
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -703,7 +707,8 @@ No admite password, activo ni bloqueado en esta operación. La invitación falli
       "codigo": "OPERADOR",
       "nombre": "Operador"
     },
-    "acceso_enviado": true
+    "acceso_enviado": true,
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -741,7 +746,8 @@ No admite password, activo ni bloqueado en esta operación. La invitación falli
       "codigo": "OPERADOR",
       "nombre": "Operador"
     },
-    "acceso_enviado": false
+    "acceso_enviado": false,
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -875,7 +881,8 @@ No admite password, activo ni bloqueado en esta operación. La invitación falli
       "id": 2,
       "codigo": "OPERADOR",
       "nombre": "Operador"
-    }
+    },
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -1012,7 +1019,8 @@ Ejemplo de entrada (las variables se resuelven en Postman):
       "id": 2,
       "codigo": "OPERADOR",
       "nombre": "Operador"
-    }
+    },
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -1136,7 +1144,8 @@ Sesión Bearer. Permiso: `USUARIOS.DESBLOQUEAR`.
       "id": 2,
       "codigo": "OPERADOR",
       "nombre": "Operador"
-    }
+    },
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -1249,7 +1258,8 @@ No admite password, activo ni bloqueado en esta operación. La invitación falli
       "codigo": "OPERADOR",
       "nombre": "Operador"
     },
-    "acceso_enviado": true
+    "acceso_enviado": true,
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -1287,7 +1297,8 @@ No admite password, activo ni bloqueado en esta operación. La invitación falli
       "codigo": "OPERADOR",
       "nombre": "Operador"
     },
-    "acceso_enviado": false
+    "acceso_enviado": false,
+    "permisos_extra": []
   },
   "errorMessageDTO": null
 }
@@ -5842,7 +5853,10 @@ Sesión Bearer. Visibilidad según rol y ámbitos.
         ],
         "imagen_url": null,
         "created_at": "2026-11-17T18:00:00.000000Z",
-        "updated_at": "2026-11-17T18:00:00.000000Z"
+        "updated_at": "2026-11-17T18:00:00.000000Z",
+        "beneficios_total": 0,
+        "beneficios_agotados": 0,
+        "avance_beneficios": 0
       }
     ],
     "paginacion": {
@@ -5963,7 +5977,10 @@ Sesión Bearer. Visibilidad según rol y ámbitos.
     ],
     "imagen_url": null,
     "created_at": "2026-11-17T18:00:00.000000Z",
-    "updated_at": "2026-11-17T18:00:00.000000Z"
+    "updated_at": "2026-11-17T18:00:00.000000Z",
+    "beneficios_total": 0,
+    "beneficios_agotados": 0,
+    "avance_beneficios": 0
   },
   "errorMessageDTO": null
 }
@@ -6101,7 +6118,10 @@ No enviar estado ni rutas de imagen. POST crea BORRADOR; PUT reemplaza campos op
     ],
     "imagen_url": null,
     "created_at": "2026-11-17T18:00:00.000000Z",
-    "updated_at": "2026-11-17T18:00:00.000000Z"
+    "updated_at": "2026-11-17T18:00:00.000000Z",
+    "beneficios_total": 0,
+    "beneficios_agotados": 0,
+    "avance_beneficios": 0
   },
   "errorMessageDTO": null
 }
@@ -6258,7 +6278,10 @@ No enviar estado ni rutas de imagen. POST crea BORRADOR; PUT reemplaza campos op
     ],
     "imagen_url": null,
     "created_at": "2026-11-17T18:00:00.000000Z",
-    "updated_at": "2026-11-17T18:00:00.000000Z"
+    "updated_at": "2026-11-17T18:00:00.000000Z",
+    "beneficios_total": 0,
+    "beneficios_agotados": 0,
+    "avance_beneficios": 0
   },
   "errorMessageDTO": null
 }
@@ -6387,7 +6410,10 @@ Publicar requiere nombre,pilar,categoría,partner,ciudad/territorio,inicio,fin,i
     ],
     "imagen_url": null,
     "created_at": "2026-11-17T18:00:00.000000Z",
-    "updated_at": "2026-11-17T18:00:00.000000Z"
+    "updated_at": "2026-11-17T18:00:00.000000Z",
+    "beneficios_total": 0,
+    "beneficios_agotados": 0,
+    "avance_beneficios": 0
   },
   "errorMessageDTO": null
 }
@@ -6546,7 +6572,10 @@ No enviar estado ni rutas de imagen. POST crea BORRADOR; PUT reemplaza campos op
     ],
     "imagen_url": "https://backend-centrix.podium-sm.com/api/patrocinios/1/imagen",
     "created_at": "2026-11-17T18:00:00.000000Z",
-    "updated_at": "2026-11-17T18:00:00.000000Z"
+    "updated_at": "2026-11-17T18:00:00.000000Z",
+    "beneficios_total": 0,
+    "beneficios_agotados": 0,
+    "avance_beneficios": 0
   },
   "errorMessageDTO": null
 }
@@ -6612,3 +6641,1066 @@ Sesión Bearer. Visibilidad según rol y ámbitos.
 ### GET /api/modulos
 
 Alias de `GET /api/permisos`: sesión Bearer, permiso PERMISOS.CONSULTAR, filtro opcional modulo, misma estructura {permisos:[{modulo,nombre,permisos}]} y mismos códigos y mensajes.
+
+## Semana 3 — contratos y reglas compartidas
+
+Los cinco módulos nuevos aportan 19 permisos; el catálogo total tiene 64 permisos en 15 módulos. ADMIN conserva acceso completo, sin arreglo de permisos en login/me. Los demás roles reciben las concesiones agrupadas por módulo. Ningún rol distinto de ADMIN recibe permisos nuevos automáticamente.
+
+### Usuarios: ampliación de POST/PUT y respuestas
+
+`permisos_extra`: arreglo opcional de códigos distintos. Solo admite DOCUMENTOS.DESCARGAR. POST omitido usa []; PUT omitido conserva lo actual, [] quita extras. Se administra con USUARIOS.CREAR/EDITAR, como se acordó; no es exclusivo de ADMIN. Aparece en GET usuarios, detalle y usuario de login/me. Los permisos efectivos son la unión del rol y extras, con rol/módulo/permiso activo y habilidades del token. Los cambios tienen efecto en la siguiente solicitud. Quitar un extra no retira un permiso también concedido por el rol. Cada cambio conserva anterior/nuevo en bitácora.
+
+### Nuevos filtros y resumen de patrocinios
+
+GET /api/patrocinios agrega marca_id (entero positivo), vigencia_desde y vigencia_hasta (YYYY-MM-DD) y orden: nombre, vigencia_inicio, inversion, con prefijo - para descendente. Sin orden: ID descendente. Rango inclusivo por solapamiento: fin >= desde e inicio <= hasta; fechas nulas no cumplen esa comparación. Orden no válido o rango invertido: 422.
+
+Lista y detalle agregan beneficios_total, beneficios_agotados y avance_beneficios. Solo beneficios activos; agotado significa usados=disponibles. Avance es promedio aritmético de porcentajes, redondeado a dos decimales, cero sin activos. No exige CONSULTAR del módulo beneficios para recibir estos indicadores.
+
+### Tipos de respuesta de semana 3
+
+- Evento: id,patrocinio_id,ambito_id,nombre,sede,ciudad,estado_republica,fecha_hora,equipo_local,equipo_visitante,responsable,asistencia_estimada,estado,patrocinio {id,nombre,pilar_id},ambito {id,nombre},marcas [{id,nombre}],marca_ids,imagenes [{id,url}],created_at,updated_at.
+- Hito: id,nombre,fecha,tipo,detalles,patrocinio_id,evento_id,activo,patrocinio {id,nombre,pilar_id},evento {id,nombre} o null,created_at,updated_at.
+- Beneficio: id,patrocinio_id,tipo_beneficio_id,nombre,disponibles,vigencia_inicio,vigencia_fin,activo,tipo_beneficio {id,nombre},usados,avance,created_at,updated_at.
+- Aplicado: id,beneficio_id,nombre,fecha,cantidad,evento {id,nombre} o null,imagen_url,documento_url,documento_nombre,created_at,updated_at.
+- Documento: id,nombre,descripcion,categoria,estado,nombre_archivo,tipo_mime,tamano (bytes),patrocinio {id,nombre},evento {id,nombre} o null,autor {id,nombre} o null,created_at,updated_at.
+- Configuración: visibilidad_por_embotellador booleano, false inicial.
+
+Listas de eventos,hitos,beneficios y documentos: dataResponse con arreglo de ese nombre y paginacion. Aplicados: {aplicados:[...]} sin paginación, fecha descendente y luego ID descendente. Fechas simples YYYY-MM-DD; fecha_hora se recibe con zona ISO8601 y se devuelve UTC con Z. Creación/actualización de tablas de semana 3 usa marcas de tiempo del servidor America/Mexico_City.
+
+CONSULTAR del propio módulo permite ver todos sus registros aunque no se tenga PATROCINIOS.CONSULTAR. Sin ese permiso: patrocinio publicado de Nacional o ámbitos asignados; eventos usan su propio ámbito, documentos y aplicados ligados a eventos deben cumplir ambos ámbitos. Hitos siguen únicamente al patrocinio. Hitos/beneficios inactivos y documentos retirados solo son visibles con CONSULTAR. Restaurar por permiso RETIRAR/ACTIVAR conserva alcance y no exige CONSULTAR adicional. Archivo o detalle fuera de alcance: 404.
+
+Archivos privados con Bearer; Cache-Control private y no-store. Imágenes de evento: máximo 20; JPG/JPEG/PNG/WebP de hasta 20 MB. Evidencias aplicadas: imagen del mismo tipo, documento PDF o imagen, cada uno hasta 20 MB. Documentos generales también aceptan PPTX, validado como contenedor de presentación además de su extensión. Visor no impide guardar los bytes desde el navegador: DESCARGAR controla la operación explícita y su bitácora.
+
+### Entradas de semana 3
+
+- Evento POST/PUT: obligatorios patrocinio_id,nombre,fecha_hora. Opcionales sede,ciudad,estado_republica (ISO mexicano sin MX-),responsable,asistencia_estimada (entero 0..4294967295),marca_ids distintos,ambito_id (omitido hereda patrocinio),equipo_local/equipo_visitante (ambos o ninguno). Textos máximo 255. PUT reemplaza datos opcionales y marcas. No enviar estado. Cambiar patrocinio se bloquea con 409 si deja hitos,documentos o aplicaciones asociados incompatibles.
+- Hito POST/PUT: nombre,fecha YYYY-MM-DD,tipo FECHA_LIMITE/ENTREGA/OTRO,patrocinio_id obligatorios; detalles opcional hasta 20000,evento_id opcional del mismo patrocinio. No enviar activo.
+- Beneficio POST/PUT: patrocinio_id,nombre,tipo_beneficio_id activo,disponibles entero 1..4294967295,vigencia_inicio y vigencia_fin obligatorios (YYYY-MM-DD; fin >= inicio). No enviar activo. Se pueden conservar tipos previamente asignados inactivos.
+- Aplicado POST: nombre,fecha dentro de vigencia,cantidad entero >=1; evento_id opcional del mismo patrocinio; imagen y documento opcionales. Edición multipart vía POST reemplaza campos de datos; archivos omitidos se conservan; quitar_imagen=1/quitar_documento=1 los retiran. No enviar archivo nuevo y quitarlo en la misma petición. Beneficio inactivo: 409 para registro/edición; aplicados se pueden borrar con REGISTRAR y visibilidad.
+- Documento POST multipart: nombre,categoria CONTENIDO_VISUAL/REPORTE_POST_EVENTO/OTRO,patrocinio_id,archivo obligatorios; descripcion hasta 20000 y evento_id opcionales. PUT solo datos y reemplaza opcionales. Cambiar archivo por POST separado.
+
+
+## Eventos
+
+### GET /api/eventos
+
+Sesión; alcance del módulo.
+
+**Query opcional:** `patrocinio_id`, `pilar_id`, `ambito_id`, `estado`, `desde`, `hasta`, `buscar`, `marca_id`, `orden`, `page`, `per_page`. desde/hasta ISO8601 con zona; estado PROGRAMADO/CANCELADO/REALIZADO; orden fecha_hora o -fecha_hora.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### GET /api/eventos/{id}
+
+Sesión; alcance del módulo.
+
+Ruta: id entero positivo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/eventos
+
+Sesión y permiso EVENTOS.CREAR.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Evento de prueba",
+  "sede": "Estadio",
+  "ciudad": "Ciudad de México",
+  "estado_republica": "CMX",
+  "fecha_hora": "{{evento_fecha_hora}}",
+  "equipo_local": "Equipo local",
+  "equipo_visitante": "Equipo visitante",
+  "responsable": "Responsable",
+  "asistencia_estimada": 1000,
+  "marca_ids": [],
+  "ambito_id": "{{embotellador_id}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Evento creado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### PUT /api/eventos/{id}
+
+Sesión y permiso EVENTOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Evento de prueba",
+  "sede": "Estadio",
+  "ciudad": "Ciudad de México",
+  "estado_republica": "CMX",
+  "fecha_hora": "{{evento_fecha_hora}}",
+  "equipo_local": "Equipo local",
+  "equipo_visitante": "Equipo visitante",
+  "responsable": "Responsable",
+  "asistencia_estimada": 1000,
+  "marca_ids": [],
+  "ambito_id": "{{embotellador_id}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Evento actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 409 | El evento tiene registros de otro patrocinio y no se puede trasladar. / El evento tiene beneficios de otro patrocinio y no se puede trasladar. |
+
+
+### PATCH /api/eventos/{id}/estado
+
+Sesión y permiso EVENTOS.CANCELAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "estado": "CANCELADO"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Estado del evento actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+CANCELADO se conserva aunque pase la fecha; PROGRAMADO en pasado se devuelve REALIZADO. Para volver a PROGRAMADO, restaurar y reprogramar a futuro. REALIZADO se calcula al consultar, no hay actualización automática que genere entradas ficticias de bitácora.
+
+
+### POST /api/eventos/{id}/imagenes
+
+Sesión y permiso EVENTOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo multipart/form-data** — campos y validaciones en “Entradas de semana 3”.
+
+```text
+archivo: <archivo obligatorio>
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Imagen agregada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 409 | El evento admite hasta 20 imágenes. |
+| 422 | El contenido y la extensión del archivo no corresponden a un formato permitido. |
+| 413 | El archivo supera el tamaño permitido. El máximo es 20 MB. (rechazo por tamaño del cuerpo) |
+
+
+### GET /api/eventos/{id}/imagenes/{imagen_id}
+
+Sesión; alcance del módulo.
+
+Ruta: id entero positivo; imagen_id debe pertenecer al evento.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Bytes del archivo; Content-Type real, sin JSON. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### DELETE /api/eventos/{id}/imagenes/{imagen_id}
+
+Sesión y permiso EVENTOS.EDITAR.
+
+Ruta: id entero positivo; imagen_id debe pertenecer al evento.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Imagen eliminada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Hitos
+
+### GET /api/hitos
+
+Sesión; alcance del módulo.
+
+**Query opcional:** `patrocinio_id`, `evento_id`, `pilar_id`, `activo`, `desde`, `hasta`, `page`, `per_page`. desde/hasta YYYY-MM-DD; activo 1/0.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/hitos
+
+Sesión y permiso HITOS.CREAR.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Entrega de prueba",
+  "fecha": "{{fecha}}",
+  "tipo": "ENTREGA",
+  "detalles": "Detalle",
+  "evento_id": "{{evento_id}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Hito creado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### PUT /api/hitos/{id}
+
+Sesión y permiso HITOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Entrega de prueba",
+  "fecha": "{{fecha}}",
+  "tipo": "ENTREGA",
+  "detalles": "Detalle",
+  "evento_id": "{{evento_id}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Hito actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### PATCH /api/hitos/{id}/estado
+
+Sesión y permiso HITOS.RETIRAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "activo": false
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Estado del hito actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Beneficios
+
+### GET /api/beneficios
+
+Sesión; alcance del módulo.
+
+**Query opcional:** `patrocinio_id`, `activo`, `page`, `per_page`. 
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/beneficios
+
+Sesión y permiso BENEFICIOS.CREAR.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Boletos",
+  "tipo_beneficio_id": "{{tipo_beneficio_id}}",
+  "disponibles": 10,
+  "vigencia_inicio": "{{vigencia_inicio}}",
+  "vigencia_fin": "{{vigencia_fin}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Beneficio creado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### PUT /api/beneficios/{id}
+
+Sesión y permiso BENEFICIOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "patrocinio_id": "{{patrocinio_id}}",
+  "nombre": "Boletos",
+  "tipo_beneficio_id": "{{tipo_beneficio_id}}",
+  "disponibles": 10,
+  "vigencia_inicio": "{{vigencia_inicio}}",
+  "vigencia_fin": "{{vigencia_fin}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Beneficio actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 422 | No puede ser menor que la cantidad ya utilizada. (errors.disponibles) |
+| 422 | La vigencia debe incluir todas las aplicaciones existentes. |
+| 409 | El beneficio tiene aplicaciones de eventos de otro patrocinio. |
+
+
+### PATCH /api/beneficios/{id}/estado
+
+Sesión y permiso BENEFICIOS.ACTIVAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "activo": false
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Estado del beneficio actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Beneficios aplicados
+
+### GET /api/beneficios/{id}/aplicados
+
+Sesión; alcance del módulo.
+
+Ruta: id entero positivo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/beneficios/{id}/aplicados
+
+Sesión y permiso BENEFICIOS.REGISTRAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo multipart/form-data** — campos y validaciones en “Entradas de semana 3”.
+
+```text
+nombre: Uso de boletos
+fecha: {{fecha}}
+cantidad: 1
+evento_id: {{evento_id}}
+imagen: <archivo opcional>
+documento: <archivo opcional>
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Aplicación registrada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 409 | El beneficio está inactivo y no admite aplicaciones. |
+| 422 | La cantidad supera los beneficios disponibles. (errors.cantidad) |
+| 422 | No envíes un archivo y su eliminación al mismo tiempo. |
+| 422 | El contenido y la extensión del archivo no corresponden a un formato permitido. |
+| 413 | El archivo supera el tamaño permitido. El máximo es 20 MB. (rechazo por tamaño del cuerpo) |
+
+
+### POST /api/beneficios-aplicados/{id}
+
+Sesión y permiso BENEFICIOS.REGISTRAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo multipart/form-data** — campos y validaciones en “Entradas de semana 3”.
+
+```text
+nombre: Uso de boletos
+fecha: {{fecha}}
+cantidad: 1
+evento_id: {{evento_id}}
+quitar_imagen: 0
+quitar_documento: 0
+imagen: <archivo opcional>
+documento: <archivo opcional>
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Aplicación actualizada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 409 | El beneficio está inactivo y no admite aplicaciones. |
+| 422 | La cantidad supera los beneficios disponibles. (errors.cantidad) |
+| 422 | No envíes un archivo y su eliminación al mismo tiempo. |
+| 422 | El contenido y la extensión del archivo no corresponden a un formato permitido. |
+| 413 | El archivo supera el tamaño permitido. El máximo es 20 MB. (rechazo por tamaño del cuerpo) |
+
+
+### DELETE /api/beneficios-aplicados/{id}
+
+Sesión y permiso BENEFICIOS.REGISTRAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Aplicación eliminada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### GET /api/beneficios-aplicados/{id}/imagen
+
+Sesión; alcance del módulo.
+
+Ruta: id entero positivo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Bytes del archivo; Content-Type real, sin JSON. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### GET /api/beneficios-aplicados/{id}/documento
+
+Sesión; alcance del módulo.
+
+Ruta: id entero positivo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Bytes del archivo; Content-Type real, sin JSON. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Documentos
+
+### GET /api/documentos
+
+Sesión; alcance del módulo.
+
+**Query opcional:** `patrocinio_id`, `evento_id`, `categoria`, `estado`, `page`, `per_page`. 
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/documentos
+
+Sesión y permiso DOCUMENTOS.SUBIR.
+
+**Cuerpo multipart/form-data** — campos y validaciones en “Entradas de semana 3”.
+
+```text
+nombre: Reporte de prueba
+descripcion: Descripción
+categoria: REPORTE_POST_EVENTO
+patrocinio_id: {{patrocinio_id}}
+evento_id: {{evento_id}}
+archivo: <archivo obligatorio>
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 201 | Documento subido correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 422 | El contenido y la extensión del archivo no corresponden a un formato permitido. |
+| 413 | El archivo supera el tamaño permitido. El máximo es 20 MB. (rechazo por tamaño del cuerpo) |
+
+
+### PUT /api/documentos/{id}
+
+Sesión y permiso DOCUMENTOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "nombre": "Reporte de prueba",
+  "descripcion": "Descripción",
+  "categoria": "REPORTE_POST_EVENTO",
+  "patrocinio_id": "{{patrocinio_id}}",
+  "evento_id": "{{evento_id}}"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Documento actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### POST /api/documentos/{id}/archivo
+
+Sesión y permiso DOCUMENTOS.EDITAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo multipart/form-data** — campos y validaciones en “Entradas de semana 3”.
+
+```text
+archivo: <archivo obligatorio>
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Archivo reemplazado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+| 422 | El contenido y la extensión del archivo no corresponden a un formato permitido. |
+| 413 | El archivo supera el tamaño permitido. El máximo es 20 MB. (rechazo por tamaño del cuerpo) |
+
+
+### PATCH /api/documentos/{id}/estado
+
+Sesión y permiso DOCUMENTOS.RETIRAR.
+
+Ruta: id entero positivo.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "estado": "RETIRADO"
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Estado del documento actualizado correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### GET /api/documentos/{id}/archivo
+
+Sesión; alcance del módulo. Descargar explícitamente requiere DOCUMENTOS.DESCARGAR (rol o extra).
+
+Ruta: id entero positivo.
+
+**Query opcional:** `descargar`. descargar=0 (inline, predeterminado) o 1 (attachment).
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Bytes del archivo; Content-Type real, sin JSON. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Configuración
+
+### GET /api/configuracion
+
+Sesión; alcance del módulo.
+
+**Cuerpo:** ninguno.
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Consulta correcta. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+### PUT /api/configuracion
+
+Sesión y permiso CONFIGURACION.EDITAR.
+
+**Cuerpo JSON** — campos y validaciones en “Entradas de semana 3”.
+
+```json
+{
+  "visibilidad_por_embotellador": false
+}
+```
+
+**Respuestas**
+
+| HTTP | Mensaje / contenido |
+|---|---|
+| 200 | Configuración actualizada correctamente. |
+| 401 | La sesión no está disponible. Inicia sesión nuevamente. / La sesión expiró por inactividad. Inicia sesión nuevamente. |
+| 403 | No tienes permiso para realizar esta acción. / La cuenta no está disponible. |
+| 404 | No se encontró el recurso solicitado. (inexistente o fuera de alcance) |
+| 422 | Los datos proporcionados no son válidos. Con errors por campo. |
+| 400 | Utiliza una conexión HTTPS segura. |
+| 500 | Ocurrió un error interno del servidor. |
+| 503 | El servicio no está disponible. |
+
+
+## Ejemplos de respuesta de semana 3
+
+Los ejemplos siguientes corresponden a los tipos de dataResponse indicados en las operaciones anteriores. En listados paginados se colocan en el arreglo del módulo; en aplicados, en {aplicados: [...]}.
+
+### Evento — 201
+
+```json
+{
+  "statusCode": 201,
+  "message": "Evento creado correctamente.",
+  "dataResponse": {
+    "id": 1,
+    "patrocinio_id": 1,
+    "ambito_id": 1,
+    "nombre": "Evento de prueba",
+    "sede": null,
+    "ciudad": null,
+    "estado_republica": null,
+    "equipo_local": null,
+    "equipo_visitante": null,
+    "responsable": null,
+    "asistencia_estimada": null,
+    "fecha_hora": "2026-11-25T00:00:00.000000Z",
+    "estado": "PROGRAMADO",
+    "patrocinio": {
+      "id": 1,
+      "nombre": "Patrocinio",
+      "pilar_id": 1
+    },
+    "ambito": {
+      "id": 1,
+      "nombre": "Nacional"
+    },
+    "marcas": [],
+    "marca_ids": [],
+    "imagenes": [],
+    "created_at": "2026-11-23 18:00:00",
+    "updated_at": "2026-11-23 18:00:00"
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Hito — 201
+
+```json
+{
+  "statusCode": 201,
+  "message": "Hito creado correctamente.",
+  "dataResponse": {
+    "id": 1,
+    "patrocinio_id": 1,
+    "evento_id": null,
+    "nombre": "Entrega",
+    "fecha": "2026-11-24",
+    "tipo": "ENTREGA",
+    "detalles": null,
+    "activo": true,
+    "patrocinio": {
+      "id": 1,
+      "nombre": "Patrocinio",
+      "pilar_id": 1
+    },
+    "evento": null,
+    "created_at": "2026-11-23 18:00:00",
+    "updated_at": "2026-11-23 18:00:00"
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Beneficio — 201
+
+```json
+{
+  "statusCode": 201,
+  "message": "Beneficio creado correctamente.",
+  "dataResponse": {
+    "id": 1,
+    "patrocinio_id": 1,
+    "tipo_beneficio_id": 1,
+    "nombre": "Boletos",
+    "disponibles": 10,
+    "vigencia_inicio": "2026-11-01",
+    "vigencia_fin": "2027-12-31",
+    "activo": true,
+    "tipo_beneficio": {
+      "id": 1,
+      "nombre": "Físico"
+    },
+    "usados": 0,
+    "avance": 0,
+    "created_at": "2026-11-23 18:00:00",
+    "updated_at": "2026-11-23 18:00:00"
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Aplicado — 201
+
+```json
+{
+  "statusCode": 201,
+  "message": "Aplicación registrada correctamente.",
+  "dataResponse": {
+    "id": 1,
+    "beneficio_id": 1,
+    "nombre": "Uso de boletos",
+    "fecha": "2026-11-24",
+    "cantidad": 1,
+    "evento": null,
+    "imagen_url": null,
+    "documento_url": null,
+    "documento_nombre": null,
+    "created_at": "2026-11-23 18:00:00",
+    "updated_at": "2026-11-23 18:00:00"
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Documento — 201
+
+```json
+{
+  "statusCode": 201,
+  "message": "Documento subido correctamente.",
+  "dataResponse": {
+    "id": 1,
+    "nombre": "Reporte",
+    "descripcion": null,
+    "categoria": "OTRO",
+    "estado": "ACTIVO",
+    "nombre_archivo": "reporte.pdf",
+    "tipo_mime": "application/pdf",
+    "tamano": 12000,
+    "patrocinio": {
+      "id": 1,
+      "nombre": "Patrocinio"
+    },
+    "evento": null,
+    "autor": {
+      "id": 8,
+      "nombre": "Usuario"
+    },
+    "created_at": "2026-11-23 18:00:00",
+    "updated_at": "2026-11-23 18:00:00"
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Configuración — 200
+
+```json
+{
+  "statusCode": 200,
+  "message": "Configuración actualizada correctamente.",
+  "dataResponse": {
+    "visibilidad_por_embotellador": false
+  },
+  "errorMessageDTO": null
+}
+```
+
+### Cupo insuficiente — 422
+
+```json
+{
+  "statusCode": 422,
+  "message": "La cantidad supera los beneficios disponibles.",
+  "dataResponse": null,
+  "errorMessageDTO": {
+    "statusCode": 422,
+    "message": "La cantidad supera los beneficios disponibles.",
+    "errors": {
+      "cantidad": [
+        "La cantidad supera los beneficios disponibles."
+      ]
+    }
+  }
+}
+```

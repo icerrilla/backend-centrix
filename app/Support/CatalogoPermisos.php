@@ -16,6 +16,11 @@ class CatalogoPermisos
             'CATALOGO_PILARES' => ['Pilares', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
             'CATALOGO_CATEGORIAS' => ['Categorías', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
             'CATALOGO_TIPOS_BENEFICIO' => ['Tipos de beneficio', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'ELIMINAR']],
+            'EVENTOS' => ['Eventos', ['CONSULTAR', 'CREAR', 'EDITAR', 'CANCELAR']],
+            'HITOS' => ['Hitos', ['CONSULTAR', 'CREAR', 'EDITAR', 'RETIRAR']],
+            'BENEFICIOS' => ['Beneficios', ['CONSULTAR', 'CREAR', 'EDITAR', 'ACTIVAR', 'REGISTRAR']],
+            'DOCUMENTOS' => ['Documentos', ['CONSULTAR', 'SUBIR', 'EDITAR', 'RETIRAR', 'DESCARGAR']],
+            'CONFIGURACION' => ['Configuración', ['EDITAR']],
             'PATROCINIOS' => ['Patrocinios', ['CONSULTAR', 'CREAR', 'EDITAR', 'PUBLICAR', 'ARCHIVAR']],
         ];
     }

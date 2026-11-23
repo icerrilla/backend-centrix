@@ -80,6 +80,19 @@ class Bitacora
 
             return ['modulo' => $catalogo['modulo'], 'accion' => $this->accionRuta($nombre)];
         }
+        foreach (['eventos' => 'EVENTOS', 'hitos' => 'HITOS', 'beneficios' => 'BENEFICIOS', 'aplicados' => 'BENEFICIOS', 'documentos' => 'DOCUMENTOS', 'configuracion' => 'CONFIGURACION'] as $prefijo => $modulo) {
+            if (str_starts_with($nombre ?? '', $prefijo.'.')) {
+                $accion = match (last(explode('.', $nombre))) {
+                    'store' => $prefijo === 'documentos' ? 'SUBIR' : 'CREAR',
+                    'update', 'reemplazar', 'borrarImagen' => 'EDITAR',
+                    'imagen' => $request->isMethod('GET') ? 'CONSULTAR' : 'EDITAR',
+                    'estado' => 'CAMBIAR_ESTADO', 'registrar', 'editar', 'destroy' => 'REGISTRAR',
+                    'archivo' => $request->boolean('descargar') ? 'DESCARGAR' : 'VER', default => 'CONSULTAR',
+                };
+
+                return ['modulo' => $modulo, 'accion' => $accion];
+            }
+        }
         if (is_string($nombre) && str_starts_with($nombre, 'patrocinios.')) {
             return ['modulo' => 'PATROCINIOS', 'accion' => $this->accionRuta($nombre)];
         }
@@ -132,6 +145,12 @@ class Bitacora
         }
 
         return match (true) {
+            str_starts_with($nombre, 'eventos.') => 'EVENTO',
+            str_starts_with($nombre, 'hitos.') => 'HITO',
+            str_starts_with($nombre, 'beneficios.') => 'BENEFICIO',
+            str_starts_with($nombre, 'aplicados.') => 'BENEFICIO_APLICADO',
+            str_starts_with($nombre, 'documentos.') => 'DOCUMENTO',
+            str_starts_with($nombre, 'configuracion.') => 'CONFIGURACION',
             str_starts_with($nombre, 'usuarios.'), str_starts_with($nombre, 'auth.') => 'USUARIO',
             str_starts_with($nombre, 'roles.') => 'ROL',
             str_starts_with($nombre, 'patrocinios.') => 'PATROCINIO',

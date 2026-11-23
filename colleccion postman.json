@@ -2,7 +2,7 @@
   "info": {
     "name": "Centrix — Colección Postman",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Centrix: ejemplos ilustrativos de éxito y errores por petición, revisados contra el código local. No contienen tokens utilizables ni capturas de producción. Edita variables antes de ejecutar; las operaciones de escritura sí cambian datos. Filtros opcionales deshabilitados en Params. Documentación: docs/contrato-api.md."
+    "description": "Centrix, semana 3: peticiones por módulo, filtros opcionales y variables. Sin ejemplos de respuesta: consultar docs/contrato-api.md. Las operaciones de escritura sí modifican datos; revisar entorno e IDs antes de ejecutar."
   },
   "auth": {
     "type": "bearer",
@@ -194,6 +194,61 @@
       "key": "bitacora_usuario_id",
       "value": "8",
       "type": "string"
+    },
+    {
+      "key": "evento_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "evento_imagen_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "hito_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "beneficio_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "aplicado_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "documento_id",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "evento_fecha_hora",
+      "value": "2026-11-24T18:00:00-06:00",
+      "type": "string"
+    },
+    {
+      "key": "fecha",
+      "value": "2026-11-24",
+      "type": "string"
+    },
+    {
+      "key": "vigencia_inicio",
+      "value": "2026-11-01",
+      "type": "string"
+    },
+    {
+      "key": "vigencia_fin",
+      "value": "2027-12-31",
+      "type": "string"
+    },
+    {
+      "key": "usuario_permisos_extra",
+      "value": "[]",
+      "type": "string"
     }
   ],
   "item": [
@@ -237,7 +292,7 @@
                 }
               }
             },
-            "description": "ADMIN devuelve usuario.rol sin usuario.permisos y tiene todos los permisos del catálogo. Los demás roles reciben usuario.rol y usuario.permisos agrupados por módulo con acciones true/false. GET /me refleja cambios sin volver a iniciar sesión.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "ADMIN devuelve usuario.rol sin usuario.permisos y tiene todos los permisos del catálogo. Los demás roles reciben usuario.rol y usuario.permisos agrupados por módulo con acciones true/false. GET /me refleja cambios sin volver a iniciar sesión.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           },
           "event": [
             {
@@ -533,14 +588,14 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email}}\",\n  \"rol_id\": {{rol_id}},\n  \"ambito_ids\": {{usuario_ambito_ids}}\n}",
+              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email}}\",\n  \"rol_id\": {{rol_id}},\n  \"ambito_ids\": {{usuario_ambito_ids}}\n,\n  \"permisos_extra\": {{usuario_permisos_extra}}\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Al recibir 201, guarda los datos del usuario creado en las variables de la colección, sin cambiar el login administrativo ni el token Bearer. Los datos actuales corresponden a Jared (ID 8), que ya existe; cambia usuario y correo para crear otra cuenta.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Al recibir 201, guarda los datos del usuario creado en las variables de la colección, sin cambiar el login administrativo ni el token Bearer. Los datos actuales corresponden a Jared (ID 8), que ya existe; cambia usuario y correo para crear otra cuenta.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           },
           "event": [
             {
@@ -601,14 +656,14 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email_nuevo}}\",\n  \"rol_id\": {{rol_id}},\n  \"ambito_ids\": {{usuario_ambito_ids}}\n}",
+              "raw": "{\n  \"nombre\": \"{{usuario_nombre}}\",\n  \"apellido_paterno\": \"{{usuario_apellido_paterno}}\",\n  \"apellido_materno\": \"{{usuario_apellido_materno}}\",\n  \"usuario\": \"{{usuario_login}}\",\n  \"email\": \"{{usuario_email_nuevo}}\",\n  \"rol_id\": {{rol_id}},\n  \"ambito_ids\": {{usuario_ambito_ids}}\n,\n  \"permisos_extra\": {{usuario_permisos_extra}}\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "PUT requiere los datos completos. Cambiar correo, usuario o rol revoca las sesiones del usuario editado.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "PUT requiere los datos completos. Cambiar correo, usuario o rol revoca las sesiones del usuario editado.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -647,7 +702,7 @@
                 }
               }
             },
-            "description": "Una sola ruta: usuario_activo=true activa y false inactiva. También admite {\"activo\":\"activo\"} o {\"activo\":\"inactivo\"}. Inactivar revoca el acceso; activar no desbloquea.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Una sola ruta: usuario_activo=true activa y false inactiva. También admite {\"activo\":\"activo\"} o {\"activo\":\"inactivo\"}. Inactivar revoca el acceso; activar no desbloquea.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -735,7 +790,7 @@
                 }
               }
             },
-            "description": "Eliminación física. Revisa usuario_id antes de enviar. Incluye confirmar=true y conserva la bitácora.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Eliminación física. Revisa usuario_id antes de enviar. Incluye confirmar=true y conserva la bitácora.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -871,7 +926,7 @@
                 }
               }
             },
-            "description": "Crea un rol activo y sin permisos. Guarda automáticamente rol_objetivo_id. Después utiliza Asignar permisos.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Crea un rol activo y sin permisos. Guarda automáticamente rol_objetivo_id. Después utiliza Asignar permisos.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           },
           "event": [
             {
@@ -927,7 +982,7 @@
                 }
               }
             },
-            "description": "ADMIN está protegido. El estado y los permisos se modifican en sus rutas separadas.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "ADMIN está protegido. El estado y los permisos se modifican en sus rutas separadas.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -966,7 +1021,7 @@
                 }
               }
             },
-            "description": "true activa; false inactiva y revoca el acceso de todos sus usuarios. También admite los textos activo/inactivo.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "true activa; false inactiva y revoca el acceso de todos sus usuarios. También admite los textos activo/inactivo.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -998,14 +1053,14 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"permisos\": [\n    {\n      \"modulo\": \"USUARIOS\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"desbloquear\": false,\n        \"eliminar\": false,\n        \"reenviar_acceso\": false\n      }\n    },\n    {\n      \"modulo\": \"ROLES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"asignar_permisos\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"PERMISOS\",\n      \"permisos\": {\n        \"consultar\": true\n      }\n    },\n    {\n      \"modulo\": \"BITACORA\",\n      \"permisos\": {\n        \"consultar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_EMBOTELLADORES\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_MARCAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_PILARES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_CATEGORIAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_TIPOS_BENEFICIO\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"PATROCINIOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"publicar\": false,\n        \"archivar\": false\n      }\n    }\n  ]\n}",
+              "raw": "{\n  \"permisos\": [\n    {\n      \"modulo\": \"USUARIOS\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"desbloquear\": false,\n        \"eliminar\": false,\n        \"reenviar_acceso\": false\n      }\n    },\n    {\n      \"modulo\": \"ROLES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"asignar_permisos\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"PERMISOS\",\n      \"permisos\": {\n        \"consultar\": true\n      }\n    },\n    {\n      \"modulo\": \"BITACORA\",\n      \"permisos\": {\n        \"consultar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_EMBOTELLADORES\",\n      \"permisos\": {\n        \"consultar\": true,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_MARCAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_PILARES\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_CATEGORIAS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"CATALOGO_TIPOS_BENEFICIO\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"eliminar\": false\n      }\n    },\n    {\n      \"modulo\": \"PATROCINIOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"publicar\": false,\n        \"archivar\": false\n      }\n    },\n    {\n      \"modulo\": \"EVENTOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"cancelar\": false\n      }\n    },\n    {\n      \"modulo\": \"HITOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"retirar\": false\n      }\n    },\n    {\n      \"modulo\": \"BENEFICIOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"crear\": false,\n        \"editar\": false,\n        \"activar\": false,\n        \"registrar\": false\n      }\n    },\n    {\n      \"modulo\": \"DOCUMENTOS\",\n      \"permisos\": {\n        \"consultar\": false,\n        \"subir\": false,\n        \"editar\": false,\n        \"retirar\": false,\n        \"descargar\": false\n      }\n    },\n    {\n      \"modulo\": \"CONFIGURACION\",\n      \"permisos\": {\n        \"editar\": false\n      }\n    }\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
                 }
               }
             },
-            "description": "Reemplaza todos los permisos del rol. Acciones no enviadas o con false no se conceden. {\"permisos\":[]} retira todos. Solo acepta módulos/acciones del catálogo y booleanos. ADMIN está protegido.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Reemplaza todos los permisos del rol. Acciones no enviadas o con false no se conceden. {\"permisos\":[]} retira todos. Solo acepta módulos/acciones del catálogo y booleanos. ADMIN está protegido.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -1043,7 +1098,7 @@
                 }
               }
             },
-            "description": "Requiere ROLES.ELIMINAR. Rechaza el borrado si tiene usuarios asignados, incluso inactivos. ADMIN no se puede eliminar.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Requiere ROLES.ELIMINAR. Rechaza el borrado si tiene usuarios asignados, incluso inactivos. ADMIN no se puede eliminar.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         }
       ]
@@ -1071,7 +1126,7 @@
                 "permisos"
               ]
             },
-            "description": "Devuelve módulos y acciones disponibles. No permite crear, editar ni eliminar códigos.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Devuelve módulos y acciones disponibles. No permite crear, editar ni eliminar códigos.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -1492,7 +1547,7 @@
                 "imagen"
               ]
             },
-            "description": "Selecciona un archivo JPG, PNG o WebP de hasta 20 MB. Postman genera Content-Type y el boundary automáticamente.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO.",
+            "description": "Selecciona un archivo JPG, PNG o WebP de hasta 20 MB. Postman genera Content-Type y el boundary automáticamente.\n\nRespuestas y mensajes documentados en docs/contrato-api.md.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -1568,7 +1623,7 @@
                 }
               }
             },
-            "description": "Incluye todos los IDs, incluso pilares inactivos, exactamente una vez.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Incluye todos los IDs, incluso pilares inactivos, exactamente una vez.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -1826,7 +1881,7 @@
                 "imagen"
               ]
             },
-            "description": "Selecciona un archivo JPG, PNG o WebP de hasta 20 MB. Postman genera Content-Type y el boundary automáticamente.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO.",
+            "description": "Selecciona un archivo JPG, PNG o WebP de hasta 20 MB. Postman genera Content-Type y el boundary automáticamente.\n\nRespuestas y mensajes documentados en docs/contrato-api.md.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -2653,6 +2708,26 @@
                   "value": "{{patrocinio_estado}}",
                   "disabled": true,
                   "description": "Filtro opcional; habilítalo para aplicarlo."
+                },
+                {
+                  "key": "marca_id",
+                  "value": "{{marca_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "vigencia_desde",
+                  "value": "{{vigencia_inicio}}",
+                  "disabled": true
+                },
+                {
+                  "key": "vigencia_hasta",
+                  "value": "{{vigencia_fin}}",
+                  "disabled": true
+                },
+                {
+                  "key": "orden",
+                  "value": "-inversion",
+                  "disabled": true
                 }
               ]
             },
@@ -2717,7 +2792,7 @@
                 }
               }
             },
-            "description": "Solo nombre y pilar son obligatorios. Nace BORRADOR y, si se omite ambito_id, se asigna Nacional.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Solo nombre y pilar son obligatorios. Nace BORRADOR y, si se omite ambito_id, se asigna Nacional.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           },
           "event": [
             {
@@ -2769,7 +2844,7 @@
                 }
               }
             },
-            "description": "Contactos y marca_ids reemplazan sus listas. Puedes añadir ambito_id para otro embotellador; al omitirlo usa Nacional.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "Contactos y marca_ids reemplazan sus listas. Puedes añadir ambito_id para otro embotellador; al omitirlo usa Nacional.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -2808,7 +2883,7 @@
                 }
               }
             },
-            "description": "BORRADOR -> PUBLICADO -> ARCHIVADO. PUBLICADO y ARCHIVADO pueden volver a BORRADOR. Publicar exige los campos del contrato y PATROCINIOS.PUBLICAR.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO."
+            "description": "BORRADOR -> PUBLICADO -> ARCHIVADO. PUBLICADO y ARCHIVADO pueden volver a BORRADOR. Publicar exige los campos del contrato y PATROCINIOS.PUBLICAR.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
           }
         },
         {
@@ -2833,7 +2908,7 @@
                 "imagen"
               ]
             },
-            "description": "Archivo JPG/PNG/WebP hasta 20 MB.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. Las respuestas JSON usan statusCode, message, dataResponse y errorMessageDTO.",
+            "description": "Archivo JPG/PNG/WebP hasta 20 MB.\n\nRespuestas y mensajes documentados en docs/contrato-api.md.",
             "body": {
               "mode": "formdata",
               "formdata": [
@@ -2868,7 +2943,1271 @@
                 "imagen"
               ]
             },
-            "description": "Requiere el Bearer en cabecera y respeta la visibilidad. No colocar tokens en query. En Angular obtener como Blob con HttpClient.\n\nEjemplos ilustrativos del contrato vigente; no son respuestas capturadas de producción. Los filtros deshabilitados son opcionales: actívalos en Params. Los ejemplos no ejecutan solicitudes. El éxito devuelve bytes de imagen, sin envoltura JSON; los errores sí son JSON."
+            "description": "Requiere el Bearer en cabecera y respeta la visibilidad. No colocar tokens en query. En Angular obtener como Blob con HttpClient.\n\nRespuestas y mensajes documentados en docs/contrato-api.md."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eventos",
+      "item": [
+        {
+          "name": "Listar eventos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "patrocinio_id",
+                  "value": "{{patrocinio_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "pilar_id",
+                  "value": "{{pilar_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "ambito_id",
+                  "value": "{{embotellador_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "PROGRAMADO",
+                  "disabled": true
+                },
+                {
+                  "key": "desde",
+                  "value": "{{evento_fecha_hora}}",
+                  "disabled": true
+                },
+                {
+                  "key": "hasta",
+                  "value": "2027-12-31T23:59:59-06:00",
+                  "disabled": true
+                },
+                {
+                  "key": "buscar",
+                  "value": "prueba",
+                  "disabled": true
+                },
+                {
+                  "key": "marca_id",
+                  "value": "{{marca_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "orden",
+                  "value": "fecha_hora",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": false
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Detalle",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/eventos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Evento de prueba\",\n  \"sede\": \"Estadio\",\n  \"ciudad\": \"Ciudad de México\",\n  \"estado_republica\": \"CMX\",\n  \"fecha_hora\": \"{{evento_fecha_hora}}\",\n  \"equipo_local\": \"Equipo local\",\n  \"equipo_visitante\": \"Equipo visitante\",\n  \"responsable\": \"Responsable\",\n  \"asistencia_estimada\": 1000,\n  \"marca_ids\": [],\n  \"ambito_id\": {{embotellador_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && Number.isInteger(registro.id)) pm.collectionVariables.set('evento_id', String(registro.id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar o reprogramar",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Evento de prueba\",\n  \"sede\": \"Estadio\",\n  \"ciudad\": \"Ciudad de México\",\n  \"estado_republica\": \"CMX\",\n  \"fecha_hora\": \"{{evento_fecha_hora}}\",\n  \"equipo_local\": \"Equipo local\",\n  \"equipo_visitante\": \"Equipo visitante\",\n  \"responsable\": \"Responsable\",\n  \"asistencia_estimada\": 1000,\n  \"marca_ids\": [],\n  \"ambito_id\": {{embotellador_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cancelar o restaurar",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}",
+                "estado"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"CANCELADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Agregar imagen",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}/imagenes",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}",
+                "imagenes"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && registro.imagenes && registro.imagenes.length) pm.collectionVariables.set('evento_imagen_id', String(registro.imagenes[registro.imagenes.length - 1].id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ver imagen",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}/imagenes/{{evento_imagen_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}",
+                "imagenes",
+                "{{evento_imagen_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Eliminar imagen",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/eventos/{{evento_id}}/imagenes/{{evento_imagen_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "eventos",
+                "{{evento_id}}",
+                "imagenes",
+                "{{evento_imagen_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hitos",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/hitos?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "hitos"
+              ],
+              "query": [
+                {
+                  "key": "patrocinio_id",
+                  "value": "{{patrocinio_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "evento_id",
+                  "value": "{{evento_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "pilar_id",
+                  "value": "{{pilar_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "activo",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "desde",
+                  "value": "{{fecha}}",
+                  "disabled": true
+                },
+                {
+                  "key": "hasta",
+                  "value": "2027-12-31",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": false
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/hitos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "hitos"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Entrega de prueba\",\n  \"fecha\": \"{{fecha}}\",\n  \"tipo\": \"ENTREGA\",\n  \"detalles\": \"Detalle\",\n  \"evento_id\": {{evento_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && Number.isInteger(registro.id)) pm.collectionVariables.set('hito_id', String(registro.id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/hitos/{{hito_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "hitos",
+                "{{hito_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Entrega de prueba\",\n  \"fecha\": \"{{fecha}}\",\n  \"tipo\": \"ENTREGA\",\n  \"detalles\": \"Detalle\",\n  \"evento_id\": {{evento_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Retirar o restaurar",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/hitos/{{hito_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "hitos",
+                "{{hito_id}}",
+                "estado"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Beneficios",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/beneficios?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios"
+              ],
+              "query": [
+                {
+                  "key": "patrocinio_id",
+                  "value": "{{patrocinio_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "activo",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": false
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Crear",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/beneficios",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Boletos\",\n  \"tipo_beneficio_id\": {{tipo_beneficio_id}},\n  \"disponibles\": 10,\n  \"vigencia_inicio\": \"{{vigencia_inicio}}\",\n  \"vigencia_fin\": \"{{vigencia_fin}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && Number.isInteger(registro.id)) pm.collectionVariables.set('beneficio_id', String(registro.id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/beneficios/{{beneficio_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios",
+                "{{beneficio_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"nombre\": \"Boletos\",\n  \"tipo_beneficio_id\": {{tipo_beneficio_id}},\n  \"disponibles\": 10,\n  \"vigencia_inicio\": \"{{vigencia_inicio}}\",\n  \"vigencia_fin\": \"{{vigencia_fin}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Activar o inactivar",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/beneficios/{{beneficio_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios",
+                "{{beneficio_id}}",
+                "estado"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"activo\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Beneficios aplicados",
+      "item": [
+        {
+          "name": "Listar por beneficio",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/beneficios/{{beneficio_id}}/aplicados",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios",
+                "{{beneficio_id}}",
+                "aplicados"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Registrar",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/beneficios/{{beneficio_id}}/aplicados",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios",
+                "{{beneficio_id}}",
+                "aplicados"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Uso de boletos",
+                  "type": "text"
+                },
+                {
+                  "key": "fecha",
+                  "value": "{{fecha}}",
+                  "type": "text"
+                },
+                {
+                  "key": "cantidad",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "evento_id",
+                  "value": "{{evento_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                },
+                {
+                  "key": "documento",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && Number.isInteger(registro.id)) pm.collectionVariables.set('aplicado_id', String(registro.id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar evidencias y datos",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/beneficios-aplicados/{{aplicado_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios-aplicados",
+                "{{aplicado_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Uso de boletos",
+                  "type": "text"
+                },
+                {
+                  "key": "fecha",
+                  "value": "{{fecha}}",
+                  "type": "text"
+                },
+                {
+                  "key": "cantidad",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "evento_id",
+                  "value": "{{evento_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "quitar_imagen",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "quitar_documento",
+                  "value": "0",
+                  "type": "text"
+                },
+                {
+                  "key": "imagen",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                },
+                {
+                  "key": "documento",
+                  "type": "file",
+                  "src": [],
+                  "disabled": true
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Eliminar aplicación",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/beneficios-aplicados/{{aplicado_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios-aplicados",
+                "{{aplicado_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Ver imagen",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/beneficios-aplicados/{{aplicado_id}}/imagen",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios-aplicados",
+                "{{aplicado_id}}",
+                "imagen"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Ver documento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/beneficios-aplicados/{{aplicado_id}}/documento",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "beneficios-aplicados",
+                "{{aplicado_id}}",
+                "documento"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documentos",
+      "item": [
+        {
+          "name": "Listar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/documentos?page=1&per_page=20",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos"
+              ],
+              "query": [
+                {
+                  "key": "patrocinio_id",
+                  "value": "{{patrocinio_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "evento_id",
+                  "value": "{{evento_id}}",
+                  "disabled": true
+                },
+                {
+                  "key": "categoria",
+                  "value": "OTRO",
+                  "disabled": true
+                },
+                {
+                  "key": "estado",
+                  "value": "ACTIVO",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": false
+                },
+                {
+                  "key": "per_page",
+                  "value": "20",
+                  "disabled": false
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Subir",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/documentos",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nombre",
+                  "value": "Reporte de prueba",
+                  "type": "text"
+                },
+                {
+                  "key": "descripcion",
+                  "value": "Descripción",
+                  "type": "text"
+                },
+                {
+                  "key": "categoria",
+                  "value": "REPORTE_POST_EVENTO",
+                  "type": "text"
+                },
+                {
+                  "key": "patrocinio_id",
+                  "value": "{{patrocinio_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "evento_id",
+                  "value": "{{evento_id}}",
+                  "type": "text"
+                },
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code >= 200 && pm.response.code < 300) {",
+                  "    const registro = pm.response.json().dataResponse;",
+                  "    if (registro && Number.isInteger(registro.id)) pm.collectionVariables.set('documento_id', String(registro.id));",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Editar datos",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/documentos/{{documento_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos",
+                "{{documento_id}}"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Reporte de prueba\",\n  \"descripcion\": \"Descripción\",\n  \"categoria\": \"REPORTE_POST_EVENTO\",\n  \"patrocinio_id\": {{patrocinio_id}},\n  \"evento_id\": {{evento_id}}\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Reemplazar archivo",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/documentos/{{documento_id}}/archivo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos",
+                "{{documento_id}}",
+                "archivo"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "archivo",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Retirar o restaurar",
+          "request": {
+            "method": "PATCH",
+            "url": {
+              "raw": "{{base_url}}/documentos/{{documento_id}}/estado",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos",
+                "{{documento_id}}",
+                "estado"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"RETIRADO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ver o descargar archivo",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/documentos/{{documento_id}}/archivo",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documentos",
+                "{{documento_id}}",
+                "archivo"
+              ],
+              "query": [
+                {
+                  "key": "descargar",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configuración",
+      "item": [
+        {
+          "name": "Consultar",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/configuracion",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "configuracion"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params."
+          }
+        },
+        {
+          "name": "Editar",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{base_url}}/configuracion",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "configuracion"
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "description": "Semana 3. Respuestas y códigos en docs/contrato-api.md. Verifica los IDs antes de ejecutar cambios. Filtros opcionales deshabilitados en Params.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"visibilidad_por_embotellador\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
           }
         }
       ]

@@ -157,8 +157,9 @@ class CatalogoNegocioController extends Controller
                 $referencias = match ($config['tabla']) {
                     'pilares' => [['patrocinios', 'pilar_id']],
                     'categorias' => [['patrocinios', 'categoria_id']],
-                    'marcas' => [['patrocinio_marca', 'marca_id']],
-                    'embotelladores' => [['patrocinios', 'ambito_id'], ['usuario_embotellador', 'embotellador_id']],
+                    'marcas' => [['patrocinio_marca', 'marca_id'], ['evento_marca', 'marca_id']],
+                    'embotelladores' => [['patrocinios', 'ambito_id'], ['usuario_embotellador', 'embotellador_id'], ['eventos', 'ambito_id']],
+                    'tipos_beneficio' => [['beneficios', 'tipo_beneficio_id']],
                     default => [],
                 };
                 foreach ($referencias as [$tabla, $campo]) {

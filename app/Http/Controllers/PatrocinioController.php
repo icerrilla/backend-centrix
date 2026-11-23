@@ -20,9 +20,13 @@ class PatrocinioController extends Controller
             'buscar' => ['sometimes', 'nullable', 'string', 'max:100'],
             'pilar_id' => ['sometimes', 'integer', 'min:1'], 'ambito_id' => ['sometimes', 'integer', 'min:1'],
             'estado' => ['sometimes', Rule::in(['BORRADOR', 'PUBLICADO', 'ARCHIVADO'])],
+            'marca_id' => ['sometimes', 'integer', 'min:1'],
+            'vigencia_desde' => ['sometimes', 'date_format:Y-m-d'],
+            'vigencia_hasta' => ['sometimes', 'date_format:Y-m-d', Rule::when($request->filled('vigencia_desde'), 'after_or_equal:vigencia_desde')],
+            'orden' => ['sometimes', Rule::in(['nombre', '-nombre', 'vigencia_inicio', '-vigencia_inicio', 'inversion', '-inversion'])],
             'page' => ['sometimes', 'integer', 'min:1'], 'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
         ]);
-        $query = Patrocinio::visiblesPara($request->user())->with(['pilar', 'categoria', 'ambito', 'marcas', 'contactos'])->orderByDesc('id');
+        $query = Patrocinio::visiblesPara($request->user())->with(['pilar', 'categoria', 'ambito', 'marcas', 'contactos']);
         foreach (['pilar_id', 'ambito_id', 'estado'] as $campo) {
             if (isset($input[$campo])) {
                 $query->where($campo, $input[$campo]);
@@ -31,6 +35,19 @@ class PatrocinioController extends Controller
         if (! empty($input['buscar'])) {
             $query->whereRaw('LOWER(nombre) LIKE ?', ['%'.mb_strtolower($input['buscar']).'%']);
         }
+        if (isset($input['marca_id'])) {
+            $query->whereHas('marcas', fn ($q) => $q->where('marcas.id', $input['marca_id']));
+        }
+        if (isset($input['vigencia_desde'])) {
+            $query->where('vigencia_fin', '>=', $input['vigencia_desde']);
+        }
+        if (isset($input['vigencia_hasta'])) {
+            $query->where('vigencia_inicio', '<=', $input['vigencia_hasta']);
+        }
+        if (isset($input['orden'])) {
+            $query->orderBy(ltrim($input['orden'], '-'), str_starts_with($input['orden'], '-') ? 'desc' : 'asc');
+        }
+        $query->orderByDesc('id');
         $pagina = $query->paginate($input['per_page'] ?? 20);
         $bitacora->contexto($request, 'PATROCINIOS', 'CONSULTAR', 'Se consultó el listado de patrocinios.');
 

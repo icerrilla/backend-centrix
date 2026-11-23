@@ -74,11 +74,13 @@ class UsuarioController extends Controller
 
         return DB::transaction(function () use ($request, $datos, $bitacora, $enlaces) {
             $ambitos = $datos['ambito_ids'] ?? [];
-            unset($datos['ambito_ids']);
+            $extras = $datos['permisos_extra'] ?? [];
+            unset($datos['ambito_ids'], $datos['permisos_extra']);
             $this->validarRol($datos['rol_id']);
             $usuario = new User;
             $usuario->forceFill($datos + ['password' => Str::random(64), 'requiere_establecer_password' => true])->save();
             $usuario->ambitosAsignados()->sync($ambitos);
+            $this->guardarExtras($usuario, $extras);
             $enviado = false;
             try {
                 DB::transaction(fn () => $enlaces->enviar($usuario));
@@ -102,7 +104,8 @@ class UsuarioController extends Controller
             $usuario = User::lockForUpdate()->findOrFail($usuario->id);
             $antes = $usuario->datosAuditoria();
             $ambitos = $datos['ambito_ids'] ?? null;
-            unset($datos['ambito_ids']);
+            $extras = $datos['permisos_extra'] ?? null;
+            unset($datos['ambito_ids'], $datos['permisos_extra']);
             $this->validarRol($datos['rol_id']);
             $this->protegerUltimoAdmin($usuario, $datos['rol_id'], $usuario->activo);
             $cambios = [];
@@ -123,6 +126,9 @@ class UsuarioController extends Controller
             $usuario->forceFill($datos)->save();
             if ($ambitos !== null) {
                 $usuario->ambitosAsignados()->sync($ambitos);
+            }
+            if ($extras !== null) {
+                $this->guardarExtras($usuario, $extras);
             }
             $usuario->unsetRelation('rol');
             if ($cambiaAcceso) {
@@ -228,6 +234,8 @@ class UsuarioController extends Controller
             'rol_id' => ['required', 'integer', Rule::exists('roles', 'id')->where('activo', true)],
             'password' => ['prohibited'], 'password_confirmation' => ['prohibited'],
             'activo' => ['prohibited'], 'bloqueado' => ['prohibited'], 'intentos_fallidos' => ['prohibited'],
+            'permisos_extra' => ['sometimes', 'array', 'list'],
+            'permisos_extra.*' => ['required', 'string', 'distinct', Rule::in(['DOCUMENTOS.DESCARGAR'])],
             'ambito_ids' => ['sometimes', 'array', 'list'],
             'ambito_ids.*' => ['required', 'integer', 'distinct', Rule::exists('embotelladores', 'id')->where('activo', true)],
         ]);
@@ -241,7 +249,19 @@ class UsuarioController extends Controller
             $datos['ambito_ids'] = $validados['ambito_ids'];
         }
 
+        if (array_key_exists('permisos_extra', $validados)) {
+            $datos['permisos_extra'] = $validados['permisos_extra'];
+        }
+
         return $datos;
+    }
+
+    private function guardarExtras(User $usuario, array $extras): void
+    {
+        DB::table('usuario_permiso_extra')->where('user_id', $usuario->id)->delete();
+        foreach ($extras as $codigo) {
+            DB::table('usuario_permiso_extra')->insert(['user_id' => $usuario->id, 'codigo' => $codigo]);
+        }
     }
 
     private function validarRol(int $id): void

@@ -40,9 +40,9 @@ class AccessSchemaTest extends TestCase
         $this->seed(DatabaseSeeder::class);
         $this->assertSame(3, DB::table('roles')->count());
         $this->assertSame('ADMIN', DB::table('roles')->value('codigo'));
-        $this->assertSame(10, DB::table('modulos')->count());
-        $this->assertSame(45, DB::table('permisos')->count());
-        $this->assertSame(45, DB::table('rol_permiso')->count());
+        $this->assertSame(15, DB::table('modulos')->count());
+        $this->assertSame(64, DB::table('permisos')->count());
+        $this->assertSame(64, DB::table('rol_permiso')->count());
         $this->assertSame(1, User::count());
 
         // Repetir seed no reactiva roles inactivados ni cambia nombres personalizados.

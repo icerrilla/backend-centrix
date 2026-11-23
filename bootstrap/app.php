@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ValidacionNegocio;
 use App\Exceptions\ValidacionPublicacion;
 use App\Http\Middleware\AuditarSolicitudes;
 use App\Http\Middleware\RequerirHttps;
@@ -32,7 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return null;
             }
             if ($exception instanceof ValidationException) {
-                if ($exception instanceof ValidacionPublicacion) {
+                if ($exception instanceof ValidacionPublicacion || $exception instanceof ValidacionNegocio) {
                     return ApiResponse::make(422, $exception->mensajePublico, null, $exception->errors());
                 }
                 $errors = array_map(fn () => ['Revisa el valor proporcionado.'], $exception->errors());

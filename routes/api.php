@@ -1,8 +1,13 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BeneficioController;
 use App\Http\Controllers\CatalogoAccesoController;
 use App\Http\Controllers\CatalogoNegocioController;
+use App\Http\Controllers\ConfiguracionController;
+use App\Http\Controllers\DocumentoController;
+use App\Http\Controllers\EventoController;
+use App\Http\Controllers\HitoController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PatrocinioController;
 use App\Http\Controllers\PermisoController;
@@ -57,3 +62,35 @@ Route::put('patrocinios/{id}', [PatrocinioController::class, 'update'])->whereNu
 Route::patch('patrocinios/{id}/estado', [PatrocinioController::class, 'estado'])->whereNumber('id')->middleware('centrix.sesion')->name('patrocinios.estado');
 Route::post('patrocinios/{id}/imagen', [PatrocinioController::class, 'imagen'])->whereNumber('id')->middleware('centrix.sesion:PATROCINIOS.EDITAR')->name('patrocinios.imagen');
 Route::get('patrocinios/{id}/imagen', [PatrocinioController::class, 'verImagen'])->whereNumber('id')->middleware('centrix.sesion')->name('patrocinios.imagen.ver');
+
+// Semana 3: todas las rutas pasan por sesión y auditoría.
+Route::get('eventos', [EventoController::class, 'index'])->middleware('centrix.sesion')->name('eventos.index');
+Route::get('eventos/{id}', [EventoController::class, 'show'])->whereNumber('id')->middleware('centrix.sesion')->name('eventos.show');
+Route::post('eventos', [EventoController::class, 'store'])->middleware('centrix.sesion:EVENTOS.CREAR')->name('eventos.store');
+Route::put('eventos/{id}', [EventoController::class, 'update'])->whereNumber('id')->middleware('centrix.sesion:EVENTOS.EDITAR')->name('eventos.update');
+Route::patch('eventos/{id}/estado', [EventoController::class, 'estado'])->whereNumber('id')->middleware('centrix.sesion:EVENTOS.CANCELAR')->name('eventos.estado');
+Route::post('eventos/{id}/imagenes', [EventoController::class, 'imagen'])->whereNumber('id')->middleware('centrix.sesion:EVENTOS.EDITAR')->name('eventos.imagen');
+Route::get('eventos/{id}/imagenes/{imagen_id}', [EventoController::class, 'verImagen'])->whereNumber('id')->whereNumber('imagen_id')->middleware('centrix.sesion')->name('eventos.imagen.ver');
+Route::delete('eventos/{id}/imagenes/{imagen_id}', [EventoController::class, 'borrarImagen'])->whereNumber('id')->whereNumber('imagen_id')->middleware('centrix.sesion:EVENTOS.EDITAR')->name('eventos.borrarImagen');
+Route::get('hitos', [HitoController::class, 'index'])->middleware('centrix.sesion')->name('hitos.index');
+Route::post('hitos', [HitoController::class, 'store'])->middleware('centrix.sesion:HITOS.CREAR')->name('hitos.store');
+Route::put('hitos/{id}', [HitoController::class, 'update'])->whereNumber('id')->middleware('centrix.sesion:HITOS.EDITAR')->name('hitos.update');
+Route::patch('hitos/{id}/estado', [HitoController::class, 'estado'])->whereNumber('id')->middleware('centrix.sesion:HITOS.RETIRAR')->name('hitos.estado');
+Route::get('beneficios', [BeneficioController::class, 'index'])->middleware('centrix.sesion')->name('beneficios.index');
+Route::post('beneficios', [BeneficioController::class, 'store'])->middleware('centrix.sesion:BENEFICIOS.CREAR')->name('beneficios.store');
+Route::put('beneficios/{id}', [BeneficioController::class, 'update'])->whereNumber('id')->middleware('centrix.sesion:BENEFICIOS.EDITAR')->name('beneficios.update');
+Route::patch('beneficios/{id}/estado', [BeneficioController::class, 'estado'])->whereNumber('id')->middleware('centrix.sesion:BENEFICIOS.ACTIVAR')->name('beneficios.estado');
+Route::get('beneficios/{id}/aplicados', [BeneficioController::class, 'aplicados'])->whereNumber('id')->middleware('centrix.sesion')->name('beneficios.aplicados');
+Route::post('beneficios/{id}/aplicados', [BeneficioController::class, 'registrar'])->whereNumber('id')->middleware('centrix.sesion:BENEFICIOS.REGISTRAR')->name('beneficios.registrar');
+Route::post('beneficios-aplicados/{id}', [BeneficioController::class, 'editarAplicado'])->whereNumber('id')->middleware('centrix.sesion:BENEFICIOS.REGISTRAR')->name('aplicados.editar');
+Route::delete('beneficios-aplicados/{id}', [BeneficioController::class, 'borrarAplicado'])->whereNumber('id')->middleware('centrix.sesion:BENEFICIOS.REGISTRAR')->name('aplicados.destroy');
+Route::get('beneficios-aplicados/{id}/imagen', [BeneficioController::class, 'archivo'])->whereNumber('id')->defaults('campo', 'imagen')->middleware('centrix.sesion')->name('aplicados.imagen');
+Route::get('beneficios-aplicados/{id}/documento', [BeneficioController::class, 'archivo'])->whereNumber('id')->defaults('campo', 'documento')->middleware('centrix.sesion')->name('aplicados.documento');
+Route::get('documentos', [DocumentoController::class, 'index'])->middleware('centrix.sesion')->name('documentos.index');
+Route::post('documentos', [DocumentoController::class, 'store'])->middleware('centrix.sesion:DOCUMENTOS.SUBIR')->name('documentos.store');
+Route::put('documentos/{id}', [DocumentoController::class, 'update'])->whereNumber('id')->middleware('centrix.sesion:DOCUMENTOS.EDITAR')->name('documentos.update');
+Route::post('documentos/{id}/archivo', [DocumentoController::class, 'reemplazar'])->whereNumber('id')->middleware('centrix.sesion:DOCUMENTOS.EDITAR')->name('documentos.reemplazar');
+Route::patch('documentos/{id}/estado', [DocumentoController::class, 'estado'])->whereNumber('id')->middleware('centrix.sesion:DOCUMENTOS.RETIRAR')->name('documentos.estado');
+Route::get('documentos/{id}/archivo', [DocumentoController::class, 'archivo'])->whereNumber('id')->middleware('centrix.sesion')->name('documentos.archivo');
+Route::get('configuracion', [ConfiguracionController::class, 'index'])->middleware('centrix.sesion')->name('configuracion.index');
+Route::put('configuracion', [ConfiguracionController::class, 'update'])->middleware('centrix.sesion:CONFIGURACION.EDITAR')->name('configuracion.update');

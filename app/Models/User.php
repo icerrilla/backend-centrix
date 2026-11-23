@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -47,7 +48,17 @@ class User extends Authenticatable
     public function datosAuditoria(): array
     {
         return $this->only(['name', 'apellido_paterno', 'apellido_materno', 'usuario', 'email', 'rol_id', 'activo', 'bloqueado', 'intentos_fallidos', 'ultimo_acceso_at'])
-            + ['estado' => $this->estado(), 'ambito_ids' => $this->ambitoIdsVisibles()];
+            + ['estado' => $this->estado(), 'ambito_ids' => $this->ambitoIdsVisibles(), 'permisos_extra' => $this->permisosExtra()];
+    }
+
+    public function permisosExtra(): array
+    {
+        return DB::table('usuario_permiso_extra')->where('user_id', $this->id)->where('codigo', 'DOCUMENTOS.DESCARGAR')->pluck('codigo')->all();
+    }
+
+    public function permisosExtraEfectivos(): array
+    {
+        return $this->rol?->activo ? Permiso::disponibles()->whereIn('codigo', $this->permisosExtra())->pluck('codigo')->all() : [];
     }
 
     public function tienePermiso(string $codigo): bool
@@ -56,7 +67,7 @@ class User extends Authenticatable
             return false;
         }
 
-        return $this->rol->esAdmin() || $this->rol->permisos()->disponibles()->where('permisos.codigo', $codigo)->exists();
+        return $this->rol->esAdmin() || in_array($codigo, $this->permisosExtraEfectivos(), true) || $this->rol->permisos()->disponibles()->where('permisos.codigo', $codigo)->exists();
     }
 
     public function datosPublicos(bool $incluirPermisos = false): array
@@ -69,11 +80,12 @@ class User extends Authenticatable
             'estado' => $this->estado(), 'ultimo_acceso_at' => $this->ultimo_acceso_at?->toISOString(),
             'created_at' => $this->created_at?->toISOString(),
             'ambitos' => Embotellador::whereIn('id', $this->ambitoIdsVisibles())->orderByDesc('es_nacional')->orderBy('nombre')->get(['id', 'nombre'])->toArray(),
+            'permisos_extra' => $this->permisosExtra(),
             'rol' => $this->rol?->only(['id', 'codigo', 'nombre']),
         ];
 
         if ($incluirPermisos && ! $this->rol?->esAdmin()) {
-            $datos['permisos'] = $this->rol?->permisosAgrupados() ?? CatalogoPermisos::agrupar([]);
+            $datos['permisos'] = CatalogoPermisos::agrupar(array_unique([...($this->rol?->codigosPermisosEfectivos() ?? []), ...$this->permisosExtraEfectivos()]));
         }
 
         return $datos;
